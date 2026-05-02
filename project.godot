@@ -1,0 +1,36 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="SV Achievements"
+run/main_scene="uid://dppcmr2wyftkq"
+config/features=PackedStringArray("4.6", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+AchievementService="*uid://cl58nbrkylxrq"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sv_achievements/plugin.cfg")
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
+
+[sv_achievements]
+
+general/achievements="uid://v485otg4b2ee"

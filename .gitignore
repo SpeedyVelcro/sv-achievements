@@ -1,0 +1,7 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Build files
+build/linux_x86_64/sv-achievements-example-game.pck
+build/linux_x86_64/sv-achievements-example-game.x86_64

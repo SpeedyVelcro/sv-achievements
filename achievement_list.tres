@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="AchievementList" format=3 uid="uid://v485otg4b2ee"]
+
+[ext_resource type="Script" uid="uid://bfkrw11bj6wk" path="res://addons/sv_achievements/data/achievement/achievement.gd" id="1_psorq"]
+[ext_resource type="Script" uid="uid://ce7vq51letive" path="res://addons/sv_achievements/data/achievement_objective/achievement_objective.gd" id="2_8y0yr"]
+[ext_resource type="Script" uid="uid://dux30a2ax0nyt" path="res://addons/sv_achievements/data/achievement_list/achievement_list.gd" id="3_rg45g"]
+
+[sub_resource type="Resource" id="Resource_xiuv7"]
+script = ExtResource("2_8y0yr")
+metadata/_custom_type_script = "uid://ce7vq51letive"
+
+[sub_resource type="Resource" id="Resource_xuvmq"]
+script = ExtResource("1_psorq")
+achievement_id = "some-achievement"
+name = "Some Achievement"
+objective = SubResource("Resource_xiuv7")
+metadata/_custom_type_script = "uid://bfkrw11bj6wk"
+
+[resource]
+script = ExtResource("3_rg45g")
+achievements = Array[ExtResource("1_psorq")]([SubResource("Resource_xuvmq")])
+metadata/_custom_type_script = "uid://dux30a2ax0nyt"
