@@ -16,4 +16,4 @@ var progress: float = 0.0:
 
 ## Target to complete the objective. When [member progress] reaches this value,
 ## the objective will complete.
-@export var target: float = 10.0
+@export var target: float = 0.0

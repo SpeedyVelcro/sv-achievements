@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://ckmib1rodfkmj"]
+
+[ext_resource type="Script" uid="uid://d3cgesyhjpqv4" path="res://other_scene.gd" id="1_g2s51"]
+
+[node name="OtherScene" type="Node" unique_id=496479065]
+script = ExtResource("1_g2s51")
+
+[node name="BackButton" type="Button" parent="." unique_id=1772555143]
+anchors_preset = -1
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 48.0
+offset_top = -31.0
+offset_right = 115.0
+offset_bottom = -48.0
+grow_vertical = 0
+text = "Back to Game"
+
+[connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

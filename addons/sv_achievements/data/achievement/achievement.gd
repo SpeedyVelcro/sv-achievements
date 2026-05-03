@@ -12,10 +12,10 @@ extends Resource
 ##
 ## Modders are advised to use longer strings with e.g. the mod name and/or author
 ## name to make ID clashes less likely. For example: "speedyvelcro-ultimate-overhaul-kill-30-enemies"
-@export var achievement_id: String = "achievement-rename-me"
+@export var achievement_id: String = ""
 
 ## Human-readable name of the achievement. This will be displayed in UIs.
-@export var name: String = "Achievement (Rename Me)"
+@export var name: String = ""
 
 ## When this objective completes, the achievement will be unlocked.
 @export var objective: AchievementObjective = AchievementObjective.new():
@@ -75,12 +75,6 @@ extends Resource
 ## If [member invisible] is true, this property has no effect as the
 ## achievement will not be visible anyway.
 @export var secret_icon: bool = false
-
-## Used for ordering when listing achievements. Achievements are generally
-## sorted in ascending order, with ties broken by alphabetical order by [member name].
-## Achievements with a negative order are an exception, as they are dumped at the
-## end of the list in alphabetical order.
-@export var order: int = -1
 
 ## If this is true, the player has completed the achievement. You may force-unlock
 ## the achievement by setting this to true, or using [method unlock]

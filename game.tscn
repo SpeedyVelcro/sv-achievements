@@ -1,0 +1,108 @@
+[gd_scene format=3 uid="uid://bj3extnm1wd0t"]
+
+[ext_resource type="Script" uid="uid://cajwx5uph6b2k" path="res://game.gd" id="1_80nbo"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_mwb40"]
+font_size = 64
+
+[node name="Game" type="Node" unique_id=200748042]
+script = ExtResource("1_80nbo")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1401297439]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 128
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 128
+theme_override_constants/margin_bottom = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=763236047]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1754096389]
+layout_mode = 2
+text = "Button Game"
+label_settings = SubResource("LabelSettings_mwb40")
+horizontal_alignment = 1
+
+[node name="ReferenceRect" type="ReferenceRect" parent="MarginContainer/VBoxContainer" unique_id=832070394]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer" unique_id=951401117]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/h_separation = 32
+theme_override_constants/v_separation = 32
+columns = 3
+
+[node name="Button1" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1008748599]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Button 1"
+
+[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=513505812]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Button 2"
+
+[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=121195353]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Button 3"
+
+[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1255577675]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Button 4"
+
+[node name="Button5" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1561949760]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Button 5"
+
+[node name="Button6" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=330792105]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+text = "Button 6"
+
+[node name="ReferenceRect2" type="ReferenceRect" parent="MarginContainer/VBoxContainer" unique_id=1805308838]
+custom_minimum_size = Vector2(0, 32)
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=467469582]
+layout_mode = 2
+alignment = 1
+
+[node name="SceneChangeButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1412464194]
+layout_mode = 2
+text = "Test Scene Change"
+
+[node name="QuitButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1563016278]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Quit Game"
+
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button1" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button1" to="." method="_on_button_1_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button2" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button3" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button4" to="." method="_on_button_4_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button4" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button5" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button5" to="." method="_on_button_5_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button6" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button6" to="." method="_on_button_6_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SceneChangeButton" to="." method="_on_scene_change_button_pressed"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

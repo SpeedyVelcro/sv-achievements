@@ -4,8 +4,31 @@ extends Node
 ## Service (autoloaded as AchievementService) that tracks achievements and completion,
 ## and allows interacting with and persisting achievement completion.
 
-## Achievements
+## Achievements array. Once it is set, you should treat the array as immutable.
+## Do not add or remove elements after setting it, as this will break internal
+## signal connections.
 var achievements: Array[Achievement] = []
+
+
+## Gets the achievement with the given ID. If there is no achievement with that
+## ID, returns null.
+func get_achievement(id: String) -> Achievement:
+	var index := achievements.find_custom(func (a: Achievement) -> bool: return a.achievement_id == id)
+	
+	if index < 0:
+		push_error("No achievement exists with ID \"%s\"" % id)
+		return null
+	
+	return achievements[index]
+
+
+func unlock(id: String) -> void:
+	var achievement := get_achievement(id)
+	
+	if achievement == null:
+		return # get_achievement() already pushed an error to the console
+	
+	achievement.unlock()
 
 
 # Override
@@ -25,7 +48,7 @@ func _load_achievements() -> void:
 		assert("Breaking execution because achievement list was not set. Release build will not break here, so make sure you set the achievement list before you export!")
 		return
 	
-	# Despite what the documentation says, it seems load() can read this .tres even though
+	# Despite what the documentation says, it seems load() can read this .tres even if
 	# ProjectSettings.editor/export/convert_text_resources_to_binary is true. See
 	# https://docs.godotengine.org/en/stable/classes/class_%40gdscript.html#class-gdscript-method-load
 	# TODO: I should make a minimal example and raise this as a docs issue. (also verify

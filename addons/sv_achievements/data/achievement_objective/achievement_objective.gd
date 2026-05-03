@@ -5,6 +5,9 @@ extends Resource
 ## Domain object that represents an achievement objective. This base class,
 ## when used on its own, is a simple boolean flag.
 
+## Human-readable description of the objective
+@export var description: String = ""
+
 ## True if the objective has been completed. When this is set to true, it will
 ## emit [signal completed]
 var completion_state: bool = false:

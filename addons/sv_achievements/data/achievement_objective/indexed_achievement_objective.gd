@@ -33,12 +33,6 @@ func count_complete() -> int:
 	return objectives.filter(func (o: AchievementObjective) -> bool: return o.completion_state).size()
 
 
-func _notification(what: int) -> void:
-	match what:
-		NOTIFICATION_PREDELETE:
-			_destructor()
-
-
 func _connect_children() -> void:
 	for objective: AchievementObjective in objectives:
 		objective.completed.connect(_on_child_objective_completed)
@@ -51,10 +45,6 @@ func _disconnect_children() -> void:
 	for objective: AchievementObjective in objectives:
 		if objective.completed.is_connected(_on_child_objective_completed):
 			objective.completed.connect(_on_child_objective_completed)
-
-
-func _destructor() -> void:
-	_disconnect_children()
 
 
 # Signal connection
