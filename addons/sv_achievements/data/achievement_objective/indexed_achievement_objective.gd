@@ -5,6 +5,7 @@ extends AchievementObjective
 ## An [AchievementObjective] that collates a number of child AchievementObjectives
 ## that can be accessed by index. The objective is completed when all child
 ## objectives have been completed.
+# TODO: signals for when count_complete changes
 
 ## Array of objectives for this objective to contain. Assign this at creation. Do not add
 ## or remove objectives at runtime as this will mess up the internal signalling.
@@ -15,6 +16,17 @@ extends AchievementObjective
 		_connect_children()
 	get:
 		return objectives
+
+## Set to true to indicate that this objective should show a progress bar
+## when displayed in a UI. The default is false because typically this kind of
+## objective is displayed in a tree-format that enumerates all of its children
+## individually, which is good enough.
+@export var show_progress_bar: bool = false
+
+## Set to true to indicate that a UI displaying this objective should also enumerate
+## and display its children. If you set this to false, you may want to set
+## [member show_progress_bar] to true to give a rough indication of progress.
+@export var show_children: bool = true
 
 
 ## Returns the number of objectives in the collection
@@ -33,6 +45,36 @@ func count_complete() -> int:
 	return objectives.filter(func (o: AchievementObjective) -> bool: return o.completion_state).size()
 
 
+# Override
+func should_show_children() -> bool:
+	return show_children
+
+
+# Override
+func should_show_progress_bar() -> bool:
+	return show_progress_bar
+
+
+# Override
+func get_progress() -> float:
+	return float(count_complete())
+
+
+# Override
+func get_progress_target() -> float:
+	return float(count())
+
+
+# Override
+func get_children() -> Array[AchievementObjective]:
+	return objectives
+
+
+# Override
+func is_progress_type() -> bool:
+	return true
+
+
 func _connect_children() -> void:
 	for objective: AchievementObjective in objectives:
 		objective.completed.connect(_on_child_objective_completed)
@@ -49,5 +91,7 @@ func _disconnect_children() -> void:
 
 # Signal connection
 func _on_child_objective_completed() -> void:
+	progress_changed.emit(float(count_complete()))
+	
 	if objectives.all(func (o: AchievementObjective) -> bool: return o.completion_state):
 		complete()

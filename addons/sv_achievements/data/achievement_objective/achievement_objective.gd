@@ -22,8 +22,62 @@ var completion_state: bool = false:
 ## Emitted when the objective is completed.
 signal completed
 
+## If the objective is capable of displaying progress, then this signal will
+## emit whenever the progress is changed with the new value.
+signal progress_changed(value: float)
+
 
 ## Complete the objective. This is equivalent to setting [member completion_state]
 ## to true.
 func complete():
 	completion_state = true
+
+
+## Returns true if this objective's progress to completion can be represented
+## as a progress bar, and is configured such that a progress bar should show
+## when displayed in the UI.
+func should_show_progress_bar() -> bool:
+	return false
+
+
+## Returns true if this objective is of a type that can be expressed as a progress
+## bar, regardless of whether it is configured to do so.
+func is_progress_type() -> bool:
+	return false
+
+
+## Returns true if this achievement objective is capable of having children
+## and is configured such that they should show when displayed in the UI.
+func should_show_children() -> bool:
+	return false
+
+
+## Gets the progress to completion for display in a [ProgressBar], provided that
+## this objective can be represented as a progress bar. If not, it will return
+## a default value of 0.0.
+func get_progress() -> float:
+	return 0.0
+
+
+## Gets the value that [method get_progress] is out of. If this objective does
+## not support progress, it just returns 0.0.
+func get_progress_target() -> float:
+	return 0.0
+
+
+## Returns the subobjectives under this objective. If the objective does not
+## support subobjectives, it returns an empty array by default.
+func get_children() -> Array[AchievementObjective]:
+	return []
+
+
+## Returns a human-readable description of the objective. Unlike reading
+## [member description] directly, this falls back on default text if the
+## description text is empty.
+func get_description_with_fallback() -> String:
+	return description if not description.is_empty() else _get_default_objective_description()
+
+
+# Override
+func _get_default_objective_description() -> String:
+	return "Complete the following:" if should_show_children() else "Complete an objective."

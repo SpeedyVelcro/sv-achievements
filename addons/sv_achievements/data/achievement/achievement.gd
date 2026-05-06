@@ -76,6 +76,22 @@ extends Resource
 ## achievement will not be visible anyway.
 @export var secret_icon: bool = false
 
+## Set to true to indicate that this achievement should enumerate its [Objective](s)
+## if displayed in a UI. If you set this to true, you should consider setting your
+## objective descriptions, otherwise they will display the default (collections and
+## indexed objectives have fairly helpful default text though)
+@export var show_objectives: bool = false
+
+## Set to true that this achievement should display a progress bar if displayed
+## in a UI and its topmost objective is one that can be displayed as a bar
+## ([IntProgressAchievementObjective], [FloatProgressAchievementObjective],
+## [CollectionAchievementObjective], and [IndexedAchievementObjective]). This
+## is separate from the visibility of individual objective progress bars, and
+## indeed you can show the top-level objective's progress at both the achievement
+## and the objective level (though it is recommended that you just go for the
+## achievement level to avoid confusion)
+@export var show_progress_bar: bool = true
+
 ## If this is true, the player has completed the achievement. You may force-unlock
 ## the achievement by setting this to true, or using [method unlock]
 var unlock_state: bool = false:
@@ -89,12 +105,20 @@ var unlock_state: bool = false:
 
 ## Emitted when the achievement is unlocked (i.e. completed)
 signal unlocked
+## If the top-level objective is capable of displaying progress, then this signal will
+## emit whenever the progress is changed with the new value.
+signal progress_changed(value: float)
 
 
 ## Completes the achievement. Equivalent to setting [member unlock_state] to
 ## true.
 func unlock() -> void:
 	unlock_state = true
+
+## Returns true if the achievement has been completed (unlocked). Equivalent
+## to getting [member unlock_state].
+func is_unlocked() -> bool:
+	return unlock_state
 
 
 ## Returns the completion state of the achievement as a JSON-serializable
@@ -109,26 +133,58 @@ func deserialize_completion(dict: Dictionary):
 	pass # TODO
 
 
+## Returns progress if the top-level objective can be expressed as progress.
+## Otherwise returns 0.0.
+func get_progress() -> float:
+	if objective == null:
+		return 0.0
+	
+	return objective.get_progress()
+
+
+## Returns the progress required to complete the top-level objective (see
+## [method get_progress]), provided that the top-level objective can be expressed
+## as progress. Otherwise returns 0.0.
+func get_progress_target() -> float:
+	if objective == null:
+		return 0.0
+	
+	return objective.get_progress_target()
+
+
+## Returns true if [member show_progress_bar] is true and the top-level objecctive
+## is one of the progress-bar-compatible types.
+func should_show_progress_bar() -> bool:
+	if objective == null:
+		return false
+	
+	return show_progress_bar and objective.is_progress_type()
+
+
 func _connect_objective() -> void:
 	if objective == null:
 		return
 	
-	if objective.completed.is_connected(_on_objective_completed):
-		return
-	
 	objective.completed.connect(_on_objective_completed)
+	objective.progress_changed.connect(_on_objective_progress_changed)
 
 
 func _disconnect_objective() -> void:
 	if objective == null:
 		return
 	
-	if not objective.completed.is_connected(_on_objective_completed):
-		return
+	if objective.completed.is_connected(_on_objective_completed):
+		objective.completed.disconnect(_on_objective_completed)
 	
-	objective.completed.disconnect(_on_objective_completed)
+	if objective.progress_changed.is_connected(_on_objective_progress_changed):
+		objective.progress_changed.disconnect(_on_objective_progress_changed)
 
 
 # Signal connection
 func _on_objective_completed() -> void:
 	unlock()
+
+
+# Signal connection
+func _on_objective_progress_changed(value: float) -> void:
+	progress_changed.emit(value)
