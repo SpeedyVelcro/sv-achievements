@@ -13,7 +13,7 @@ config_version=5
 config/name="SV Achievements"
 run/main_scene="uid://dppcmr2wyftkq"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://d4kna6h3ww5dt"
 
 [autoload]
 
