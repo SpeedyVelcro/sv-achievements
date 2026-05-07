@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://bj3extnm1wd0t"]
 
 [ext_resource type="Script" uid="uid://cajwx5uph6b2k" path="res://game.gd" id="1_80nbo"]
+[ext_resource type="PackedScene" uid="uid://3frhprt6v3o6" path="res://addons/sv_achievements/ui/achievement_list_ui/achievement_list_ui.tscn" id="2_e2o6t"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mwb40"]
 font_size = 64
+
+[sub_resource type="LabelSettings" id="LabelSettings_feb5d"]
+font_size = 37
 
 [node name="Game" type="Node" unique_id=200748042]
 script = ExtResource("1_80nbo")
@@ -19,90 +23,119 @@ theme_override_constants/margin_top = 64
 theme_override_constants/margin_right = 128
 theme_override_constants/margin_bottom = 64
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=763236047]
+[node name="GameVBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=763236047]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=1754096389]
+[node name="Label" type="Label" parent="MarginContainer/GameVBoxContainer" unique_id=1754096389]
 layout_mode = 2
 text = "Button Game"
 label_settings = SubResource("LabelSettings_mwb40")
 horizontal_alignment = 1
 
-[node name="ReferenceRect" type="ReferenceRect" parent="MarginContainer/VBoxContainer" unique_id=832070394]
+[node name="ReferenceRect" type="ReferenceRect" parent="MarginContainer/GameVBoxContainer" unique_id=832070394]
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="MarginContainer/VBoxContainer" unique_id=951401117]
+[node name="GridContainer" type="GridContainer" parent="MarginContainer/GameVBoxContainer" unique_id=951401117]
 layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/h_separation = 32
 theme_override_constants/v_separation = 32
 columns = 3
 
-[node name="Button1" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1008748599]
+[node name="Button1" type="Button" parent="MarginContainer/GameVBoxContainer/GridContainer" unique_id=1008748599]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Button 1"
 
-[node name="Button2" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=513505812]
+[node name="Button2" type="Button" parent="MarginContainer/GameVBoxContainer/GridContainer" unique_id=513505812]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Button 2"
 
-[node name="Button3" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=121195353]
+[node name="Button3" type="Button" parent="MarginContainer/GameVBoxContainer/GridContainer" unique_id=121195353]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Button 3"
 
-[node name="Button4" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1255577675]
+[node name="Button4" type="Button" parent="MarginContainer/GameVBoxContainer/GridContainer" unique_id=1255577675]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Button 4"
 
-[node name="Button5" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=1561949760]
+[node name="Button5" type="Button" parent="MarginContainer/GameVBoxContainer/GridContainer" unique_id=1561949760]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Button 5"
 
-[node name="Button6" type="Button" parent="MarginContainer/VBoxContainer/GridContainer" unique_id=330792105]
+[node name="Button6" type="Button" parent="MarginContainer/GameVBoxContainer/GridContainer" unique_id=330792105]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 text = "Button 6"
 
-[node name="ReferenceRect2" type="ReferenceRect" parent="MarginContainer/VBoxContainer" unique_id=1805308838]
+[node name="ReferenceRect2" type="ReferenceRect" parent="MarginContainer/GameVBoxContainer" unique_id=1805308838]
 custom_minimum_size = Vector2(0, 32)
 layout_mode = 2
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer" unique_id=467469582]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/GameVBoxContainer" unique_id=467469582]
 layout_mode = 2
 alignment = 1
 
-[node name="SceneChangeButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1412464194]
+[node name="AchievementsButton" type="Button" parent="MarginContainer/GameVBoxContainer/HBoxContainer" unique_id=835403678]
+layout_mode = 2
+text = "View Achievements"
+
+[node name="SceneChangeButton" type="Button" parent="MarginContainer/GameVBoxContainer/HBoxContainer" unique_id=1412464194]
 layout_mode = 2
 text = "Test Scene Change"
 
-[node name="QuitButton" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer" unique_id=1563016278]
+[node name="QuitButton" type="Button" parent="MarginContainer/GameVBoxContainer/HBoxContainer" unique_id=1563016278]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Quit Game"
 
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button1" to="." method="_on_any_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button1" to="." method="_on_button_1_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button2" to="." method="_on_button_2_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button2" to="." method="_on_any_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button3" to="." method="_on_any_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button3" to="." method="_on_button_3_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button4" to="." method="_on_button_4_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button4" to="." method="_on_any_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button5" to="." method="_on_any_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button5" to="." method="_on_button_5_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button6" to="." method="_on_any_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/GridContainer/Button6" to="." method="_on_button_6_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/SceneChangeButton" to="." method="_on_scene_change_button_pressed"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[node name="AchievementListVBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1696495107]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/AchievementListVBoxContainer" unique_id=1506590773]
+layout_mode = 2
+text = "Achievements"
+label_settings = SubResource("LabelSettings_feb5d")
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/AchievementListVBoxContainer" unique_id=245203991]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="AchievementListUI" parent="MarginContainer/AchievementListVBoxContainer/ScrollContainer" unique_id=40048756 instance=ExtResource("2_e2o6t")]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="AchievementBackButton" type="Button" parent="MarginContainer/AchievementListVBoxContainer" unique_id=277860537]
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Back to Game"
+
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_button_1_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button2" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button2" to="." method="_on_button_2_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button3" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button3" to="." method="_on_button_3_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button4" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button4" to="." method="_on_button_4_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button5" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button5" to="." method="_on_button_5_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button6" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button6" to="." method="_on_button_6_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/HBoxContainer/AchievementsButton" to="." method="_on_achievements_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/HBoxContainer/SceneChangeButton" to="." method="_on_scene_change_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
+[connection signal="pressed" from="MarginContainer/AchievementListVBoxContainer/AchievementBackButton" to="." method="_on_achievement_back_button_pressed"]

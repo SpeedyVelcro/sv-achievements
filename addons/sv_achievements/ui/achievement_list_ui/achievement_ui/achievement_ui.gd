@@ -204,7 +204,6 @@ func _display_achievement() -> void:
 	_update_reward()
 	_update_progress()
 	_update_objective_list()
-	# TODO: Update icon spacer
 
 
 func _update_icon() -> void:
@@ -285,6 +284,7 @@ func _update_progress() -> void:
 	
 	if not achievement.should_show_progress_bar():
 		_progress_bar.visible = false
+		_update_icon_spacer()
 		return
 	
 	_progress_bar.visible = true
@@ -306,6 +306,7 @@ func _update_objective_list() -> void:
 	
 	if not achievement.show_objectives or achievement.show_objectives == null:
 		_objective_container.visible = false
+		_update_icon_spacer()
 		return
 	
 	_objective_container.visible = true

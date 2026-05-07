@@ -199,6 +199,7 @@ var _achievement_scene := preload("res://addons/sv_achievements/ui/achievement_l
 func _ready() -> void:
 	for achievement: Achievement in AchievementService.achievements:
 		var ui := _achievement_scene.instantiate()
+		
 		ui.achievement = achievement
 		ui.show_icon = show_icons
 		ui.grayscale_icon_when_locked = grayscale_icons_when_locked
@@ -215,4 +216,7 @@ func _ready() -> void:
 		ui.objective_incomplete_icon = objective_incomplete_icon
 		ui.objective_complete_icon = objective_complete_icon
 		ui.objective_list_indent_size = objective_list_indent_size
+		
+		ui.size_flags_horizontal = SizeFlags.SIZE_EXPAND_FILL
+		
 		add_child(ui)

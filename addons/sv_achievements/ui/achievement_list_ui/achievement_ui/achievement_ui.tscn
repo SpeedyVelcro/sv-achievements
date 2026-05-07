@@ -19,7 +19,6 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 theme_override_constants/margin_bottom = 16
 script = ExtResource("1_kjhv8")
-icon_border_stylebox_override = ExtResource("3_2ko4p")
 default_achievement_icon = ExtResource("1_tqery")
 secret_achievement_icon = ExtResource("4_8x6gs")
 objective_incomplete_icon = ExtResource("8_c7r7q")
@@ -64,7 +63,6 @@ text = "Achievement Name"
 label_settings = SubResource("LabelSettings_ck6d2")
 
 [node name="SyncButton" type="Button" parent="VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer" unique_id=1559543088]
-visible = false
 custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_vertical = 0
