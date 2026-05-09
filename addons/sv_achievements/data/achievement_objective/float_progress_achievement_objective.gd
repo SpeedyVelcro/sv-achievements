@@ -30,6 +30,15 @@ func increase(value: float) -> void:
 	progress += value
 
 
+## Increases [member progress] to the given value. If you enter a value less
+## than the current progress, this method does nothing.
+func increase_to(value: float) -> void:
+	if value < progress:
+		return
+	
+	progress = value
+
+
 # Override
 func should_show_progress_bar() -> bool:
 	return show_progress_bar

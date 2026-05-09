@@ -71,7 +71,39 @@ objective = SubResource("Resource_epu84")
 description = "Click buttons 10 times."
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
+[sub_resource type="Resource" id="Resource_lkt0p"]
+script = ExtResource("4_rg45g")
+target = 6
+metadata/_custom_type_script = "uid://cg0mxj1vgkvaa"
+
+[sub_resource type="Resource" id="Resource_ubr0b"]
+script = ExtResource("1_psorq")
+achievement_id = "click-ascending"
+name = "Easy as 1 2 3"
+objective = SubResource("Resource_lkt0p")
+description = "Click all the buttons in ascending order."
+metadata/_custom_type_script = "uid://bfkrw11bj6wk"
+
+[sub_resource type="Resource" id="Resource_o7nnt"]
+script = ExtResource("4_rg45g")
+target = 6
+show_progress_bar = false
+metadata/_custom_type_script = "uid://cg0mxj1vgkvaa"
+
+[sub_resource type="Resource" id="Resource_lu4qg"]
+script = ExtResource("1_psorq")
+achievement_id = "click-descending"
+name = "3 2 1 sa ysaE"
+objective = SubResource("Resource_o7nnt")
+description = "Click every button in descending order."
+secret_name = true
+secret_description = true
+secret_reward = true
+secret_icon = true
+show_progress_bar = false
+metadata/_custom_type_script = "uid://bfkrw11bj6wk"
+
 [resource]
 script = ExtResource("3_rg45g")
-achievements = Array[ExtResource("1_psorq")]([SubResource("Resource_xuvmq"), SubResource("Resource_jobin"), SubResource("Resource_8y0yr")])
+achievements = Array[ExtResource("1_psorq")]([SubResource("Resource_xuvmq"), SubResource("Resource_jobin"), SubResource("Resource_8y0yr"), SubResource("Resource_ubr0b"), SubResource("Resource_lu4qg")])
 metadata/_custom_type_script = "uid://dux30a2ax0nyt"

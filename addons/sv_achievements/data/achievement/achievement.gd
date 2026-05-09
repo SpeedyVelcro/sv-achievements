@@ -96,7 +96,7 @@ extends Resource
 ## the achievement by setting this to true, or using [method unlock]
 var unlock_state: bool = false:
 	set(value):
-		var previous_value = value
+		var previous_value = unlock_state
 		unlock_state = value
 		if value and not previous_value:
 			unlocked.emit()

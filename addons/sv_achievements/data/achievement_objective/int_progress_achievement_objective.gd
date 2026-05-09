@@ -30,6 +30,15 @@ func increment() -> void:
 	progress += 1
 
 
+## Increases [member progress] to the given value. If you enter a value less
+## than the current progress, this method does nothing.
+func increase_to(value: int) -> void:
+	if value < progress:
+		return
+	
+	progress = value
+
+
 # Override
 func should_show_progress_bar() -> bool:
 	return show_progress_bar
