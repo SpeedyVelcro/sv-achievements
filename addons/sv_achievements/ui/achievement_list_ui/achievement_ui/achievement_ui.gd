@@ -356,7 +356,7 @@ func _on_achievement_unlocked() -> void:
 
 
 # Signal connection
-func _on_achievement_progress_changed() -> void:
+func _on_achievement_progress_changed(_value: float) -> void:
 	_update_progress()
 
 

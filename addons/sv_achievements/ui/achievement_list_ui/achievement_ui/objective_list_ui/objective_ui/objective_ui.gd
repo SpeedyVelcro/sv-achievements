@@ -161,5 +161,5 @@ func _on_objective_completed() -> void:
 
 
 # Override
-func _on_objective_progress_changed() -> void:
+func _on_objective_progress_changed(_value: float) -> void:
 	_update_progress()

@@ -54,6 +54,8 @@ achievement_id = "click-every-button"
 name = "I'll Try Everything Once"
 objective = SubResource("Resource_uibmq")
 description = "Click every button at least once."
+show_objectives = true
+show_progress_bar = false
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_epu84"]
