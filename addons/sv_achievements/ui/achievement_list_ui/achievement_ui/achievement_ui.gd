@@ -36,7 +36,7 @@ extends MarginContainer
 		return grayscale_icon_when_locked
 
 ## If true, a border will be displayed around the icon. This border is a panel
-## that displays above the icon with custom theming to show a border around
+## that displays above the icon with custom theming to show a white border around
 ## (not overlapping) its dimensions. To override this behaviour set a custom
 ## [StyleBox] with [member icon_border_stylebox_override].
 @export var show_icon_border: bool = true:
