@@ -9,6 +9,8 @@ extends Node
 ## signal connections.
 var achievements: Array[Achievement] = []
 
+signal achievement_unlocked(achievement: Achievement)
+
 
 ## Gets the achievement with the given ID. If there is no achievement with that
 ## ID, returns null.
@@ -34,6 +36,7 @@ func unlock(id: String) -> void:
 # Override
 func _ready() -> void:
 	_load_achievements()
+	_connect_achievements()
 
 
 func _load_achievements() -> void:
@@ -66,3 +69,24 @@ func _load_achievements() -> void:
 	achievements = achievement_list.achievements
 	
 	print("Loaded %d achievement(s)." % achievements.size())
+
+
+func _connect_achievements() -> void:
+	for achievement in achievements:
+		achievement.unlocked.connect(_on_achievement_unlocked.bind(achievement))
+
+
+func _disconnect_achievements() -> void:
+	# Don't ask me how it works but apparently get_incoming_connections() also
+	# returns connections to callables created using .bind() on this object's
+	# methods.
+	for connection in get_incoming_connections():
+		connection["signal"].disconnect(connection["callable"])
+
+
+func _on_achievement_unlocked(achievement: Achievement) -> void:
+	achievement_unlocked.emit(achievement)
+
+# Override
+func _exit_tree() -> void:
+	_disconnect_achievements()

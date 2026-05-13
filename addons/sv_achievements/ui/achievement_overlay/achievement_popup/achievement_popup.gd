@@ -77,13 +77,13 @@ extends PanelContainer
 	get:
 		return bold_reward_title
 
-var _icon_texture_rect: TextureRect = $MarginContainer/HBoxContainer/IconTextureRect
-var _icon_border_panel: Panel = $MarginContainer/HBoxContainer/IconTextureRect/IconBorderPanel
-var _name_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/NameLabel
-var _description_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/DescriptionLabel
-var _reward_container: Control = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer
-var _reward_title_label: RichTextLabel = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer/RewardTitleRichTextLabel
-var _reward_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer/RewardLabel
+@onready var _icon_texture_rect: TextureRect = $MarginContainer/HBoxContainer/IconTextureRect
+@onready var _icon_border_panel: Panel = $MarginContainer/HBoxContainer/IconTextureRect/IconBorderPanel
+@onready var _name_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/NameLabel
+@onready var _description_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/DescriptionLabel
+@onready var _reward_container: Control = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer
+@onready var _reward_title_label: RichTextLabel = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer/RewardTitleRichTextLabel
+@onready var _reward_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer/RewardLabel
 
 var _default_icon_border_stylebox: StyleBox = preload("res://addons/sv_achievements/ui/theming/icon_border/icon_border_white.tres")
 

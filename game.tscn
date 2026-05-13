@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cajwx5uph6b2k" path="res://game.gd" id="1_80nbo"]
 [ext_resource type="PackedScene" uid="uid://3frhprt6v3o6" path="res://addons/sv_achievements/ui/achievement_list_ui/achievement_list_ui.tscn" id="2_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://cnf4r72kds3xj" path="res://addons/sv_achievements/ui/achievement_overlay/achievement_overlay.tscn" id="3_feb5d"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_mwb40"]
 font_size = 64
@@ -122,6 +123,8 @@ size_flags_horizontal = 3
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Back to Game"
+
+[node name="AchievementOverlay" parent="." unique_id=1634175387 instance=ExtResource("3_feb5d")]
 
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_button_1_pressed"]
