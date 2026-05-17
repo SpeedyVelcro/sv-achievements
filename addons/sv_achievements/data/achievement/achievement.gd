@@ -108,6 +108,8 @@ signal unlocked
 ## If the top-level objective is capable of displaying progress, then this signal will
 ## emit whenever the progress is changed with the new value.
 signal progress_changed(value: float)
+## Emitted when the achievement is reset using [method reset_completion]
+signal reset
 
 
 ## Completes the achievement. Equivalent to setting [member unlock_state] to
@@ -119,6 +121,15 @@ func unlock() -> void:
 ## to getting [member unlock_state].
 func is_unlocked() -> bool:
 	return unlock_state
+
+
+## Resets the completion status of this achievement, and resets completion and
+## progress of all its objectives.
+func reset_completion() -> void:
+	if objective != null:
+		objective.reset_completion()
+	unlock_state = false
+	reset.emit()
 
 
 ## Returns the completion state of the achievement as a JSON-serializable

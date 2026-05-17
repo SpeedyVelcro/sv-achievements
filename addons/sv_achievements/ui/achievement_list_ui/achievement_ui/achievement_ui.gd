@@ -335,6 +335,7 @@ func _connect_signals() -> void:
 	
 	achievement.unlocked.connect(_on_achievement_unlocked)
 	achievement.progress_changed.connect(_on_achievement_progress_changed)
+	achievement.reset.connect(_on_achievement_reset)
 
 
 func _disconnect_signals() -> void:
@@ -346,6 +347,9 @@ func _disconnect_signals() -> void:
 	
 	if achievement.progress_changed.is_connected(_on_achievement_progress_changed):
 		achievement.progress_changed.disconnect(_on_achievement_progress_changed)
+	
+	if achievement.reset.is_connected(_on_achievement_reset):
+		achievement.reset.disconnect(_on_achievement_reset)
 
 
 # Signal connection
@@ -357,6 +361,14 @@ func _on_achievement_unlocked() -> void:
 
 # Signal connection
 func _on_achievement_progress_changed(_value: float) -> void:
+	_update_progress()
+
+
+# Signal connection
+func _on_achievement_reset() -> void:
+	_update_icon()
+	_update_details()
+	_update_reward()
 	_update_progress()
 
 

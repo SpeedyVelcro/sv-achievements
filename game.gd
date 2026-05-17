@@ -118,3 +118,7 @@ func _on_achievements_button_pressed() -> void:
 func _on_achievement_back_button_pressed() -> void:
 	_achievement_container.visible = false
 	_game_container.visible = true
+
+
+func _on_reset_button_pressed() -> void:
+	AchievementService.reset_completion()

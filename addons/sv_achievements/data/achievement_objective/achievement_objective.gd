@@ -21,6 +21,8 @@ var completion_state: bool = false:
 
 ## Emitted when the objective is completed.
 signal completed
+## Emitted when the objective is reset using [method reset_completion]
+signal reset
 
 ## If the objective is capable of displaying progress, then this signal will
 ## emit whenever the progress is changed with the new value.
@@ -78,6 +80,15 @@ func get_description_with_fallback() -> String:
 	return description if not description.is_empty() else _get_default_objective_description()
 
 
-# Override
+## Resets the completion status of this objective and any sub-objectives.
+func reset_completion() -> void:
+	for objective in get_children():
+		objective.reset_completion()
+	completion_state = false
+	reset.emit()
+
+
+## Override this to change the default objective descriptionreturned as a fallback
+## by [method get_description_with_fallback]
 func _get_default_objective_description() -> String:
 	return "Complete the following:" if should_show_children() else "Complete an objective."

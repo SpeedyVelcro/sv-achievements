@@ -143,6 +143,7 @@ func _update_indent() -> void:
 func _connect_signals() -> void:
 	objective.completed.connect(_on_objective_completed)
 	objective.progress_changed.connect(_on_objective_progress_changed)
+	objective.reset.connect(_on_objective_reset)
 
 func _disconnect_signals() -> void:
 	if objective == null:
@@ -153,13 +154,22 @@ func _disconnect_signals() -> void:
 	
 	if objective.progress_changed.is_connected(_on_objective_progress_changed):
 		objective.progress_changed.disconnect(_on_objective_progress_changed)
+	
+	if objective.reset.is_connected(_on_objective_reset):
+		objective.reset.disconnect(_on_objective_reset)
 
 
-# Override
+# Signal connection
 func _on_objective_completed() -> void:
 	_update_completion_icon()
 
 
-# Override
+# Signal connection
 func _on_objective_progress_changed(_value: float) -> void:
+	_update_progress()
+
+
+# Signal connection
+func _on_objective_reset() -> void:
+	_update_completion_icon()
 	_update_progress()

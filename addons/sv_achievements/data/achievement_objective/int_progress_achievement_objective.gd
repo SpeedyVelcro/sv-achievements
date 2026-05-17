@@ -40,6 +40,12 @@ func increase_to(value: int) -> void:
 
 
 # Override
+func reset_completion() -> void:
+	progress = 0
+	super()
+
+
+# Override
 func should_show_progress_bar() -> bool:
 	return show_progress_bar
 

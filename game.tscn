@@ -119,26 +119,38 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="AchievementBackButton" type="Button" parent="MarginContainer/AchievementListVBoxContainer" unique_id=277860537]
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/AchievementListVBoxContainer" unique_id=710891761]
+layout_mode = 2
+
+[node name="AchievementBackButton" type="Button" parent="MarginContainer/AchievementListVBoxContainer/HBoxContainer" unique_id=277860537]
 layout_mode = 2
 size_flags_horizontal = 0
 text = "Back to Game"
 
+[node name="ReferenceRect" type="ReferenceRect" parent="MarginContainer/AchievementListVBoxContainer/HBoxContainer" unique_id=1845079346]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ResetButton" type="Button" parent="MarginContainer/AchievementListVBoxContainer/HBoxContainer" unique_id=1271184583]
+layout_mode = 2
+text = "Reset Achievements"
+
 [node name="AchievementOverlay" parent="." unique_id=1634175387 instance=ExtResource("3_feb5d")]
 
-[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_button_1_pressed"]
-[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button2" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button2" to="." method="_on_button_2_pressed"]
-[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button3" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button2" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button3" to="." method="_on_button_3_pressed"]
-[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button4" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button3" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button4" to="." method="_on_button_4_pressed"]
-[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button5" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button4" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button5" to="." method="_on_button_5_pressed"]
-[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button6" to="." method="_on_any_button_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button5" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button6" to="." method="_on_button_6_pressed"]
+[connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button6" to="." method="_on_any_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/HBoxContainer/AchievementsButton" to="." method="_on_achievements_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/HBoxContainer/SceneChangeButton" to="." method="_on_scene_change_button_pressed"]
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/HBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]
-[connection signal="pressed" from="MarginContainer/AchievementListVBoxContainer/AchievementBackButton" to="." method="_on_achievement_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/AchievementListVBoxContainer/HBoxContainer/AchievementBackButton" to="." method="_on_achievement_back_button_pressed"]
+[connection signal="pressed" from="MarginContainer/AchievementListVBoxContainer/HBoxContainer/ResetButton" to="." method="_on_reset_button_pressed"]

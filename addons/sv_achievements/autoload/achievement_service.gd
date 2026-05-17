@@ -24,6 +24,7 @@ func get_achievement(id: String) -> Achievement:
 	return achievements[index]
 
 
+## Unlock the achievement that has the given ID.
 func unlock(id: String) -> void:
 	var achievement := get_achievement(id)
 	
@@ -31,6 +32,12 @@ func unlock(id: String) -> void:
 		return # get_achievement() already pushed an error to the console
 	
 	achievement.unlock()
+
+
+## Resets the completion status and progress of all achievements.
+func reset_completion() -> void:
+	for achievement in achievements:
+		achievement.reset_completion()
 
 
 # Override
