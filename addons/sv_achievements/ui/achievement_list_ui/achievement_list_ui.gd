@@ -28,6 +28,21 @@ extends VBoxContainer
 	get:
 		return grayscale_icons_when_locked
 
+## Shader material to use instead of the default when achievements are locked
+## and [member grayscale_icons_when_locked] is true. You can use this to apply
+## a grayscale shader with different channel weights. If you so choose, you may
+## also set this to use a completely different type of shader when achievements
+## are locked.
+@export var grayscale_shader_override: ShaderMaterial:
+	set(value):
+		if value == grayscale_shader_override:
+			return
+		grayscale_shader_override = value
+		for node in _achievement_nodes:
+			node.grayscale_shader_override = value
+	get:
+		return grayscale_shader_override
+
 ## If true, a border will be displayed around achievement icons. This border is a panel
 ## that displays above the icon with custom theming to show a border around
 ## (not overlapping) its dimensions. To override this behaviour set a custom

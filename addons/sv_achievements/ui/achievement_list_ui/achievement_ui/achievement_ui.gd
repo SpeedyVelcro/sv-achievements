@@ -35,6 +35,18 @@ extends MarginContainer
 	get:
 		return grayscale_icon_when_locked
 
+## Shader material to use instead of the default when achievement is locked
+## and [member grayscale_icon_when_locked] is true. You can use this to apply
+## a grayscale shader with different channel weights. If you so choose, you may
+## also set this to use a completely different type of shader when achievements
+## are locked.
+@export var grayscale_shader_override: ShaderMaterial:
+	set(value):
+		grayscale_shader_override = value
+		_update_icon()
+	get:
+		return grayscale_shader_override
+
 ## If true, a border will be displayed around the icon. This border is a panel
 ## that displays above the icon with custom theming to show a white border around
 ## (not overlapping) its dimensions. To override this behaviour set a custom
@@ -174,6 +186,7 @@ extends MarginContainer
 @onready var _objective_list_ui: Control = $VBoxContainer/ObjectiveFoldableContainer/ObjectiveListUI
 
 var _default_icon_border_stylebox: StyleBox = preload("res://addons/sv_achievements/ui/theming/icon_border/icon_border_white.tres")
+var _default_grayscale_shader: ShaderMaterial = preload("res://addons/sv_achievements/shader/grayscale_itu_shader_material.tres")
 
 
 # Override
@@ -218,8 +231,12 @@ func _update_icon() -> void:
 	
 	if achievement.is_unlocked():
 		_icon_texture_rect.texture = achievement.icon if achievement.icon != null else default_achievement_icon
+		_icon_texture_rect.material = null
 	else:
-		# TODO: grey out achievement
+		if grayscale_icon_when_locked:
+			_icon_texture_rect.material = grayscale_shader_override if grayscale_shader_override != null else _default_grayscale_shader
+		else:
+			_icon_texture_rect.material = null
 		if achievement.secret_icon:
 			_icon_texture_rect.texture = secret_achievement_icon if secret_achievement_icon != null else default_achievement_icon
 		else:
