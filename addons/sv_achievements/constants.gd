@@ -13,3 +13,10 @@ const SETTINGS_ACHIEVEMENTS_PATH := _SETTINGS_GENERAL_PATH + "/achievements"
 ## shown on achievements (these are for pushing unlock status to e.g. Steam
 ## or Newgrounds if it failed to unlock before).
 const SETTINGS_ENABLE_SYNC_PATH := _SETTINGS_GENERAL_PATH + "/enable_sync"
+## Path to the setting in [ProjectSettings] that stores the file path for the
+## user's achievement completion save file.
+const SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH := _SETTINGS_GENERAL_PATH + "/completion_save_file_path"
+
+## Default value for the path to the file that stores the user's achievement
+## progress.
+const SETTINGS_DEFAULT_COMPLETION_SAVE_FILE_PATH := "user://achievements.json"

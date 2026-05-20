@@ -55,6 +55,31 @@ func count_complete() -> int:
 
 
 # Override
+func serialize_completion() -> Dictionary:
+	var dict := super()
+	
+	dict["subobjectives"] = {}
+	for key in collection.keys():
+		dict["subobjectives"][key] = collection[key].serialize_completion()
+	
+	return dict
+
+
+# Override
+func deserialize_completion(dict: Dictionary) -> void:
+	var collection_dict: Dictionary = dict["subobjectives"] \
+			if dict.has("subobjectives") and dict["subobjectives"] is Dictionary \
+			else {}
+	
+	for key in collection.keys():
+		collection[key].deserialize_completion(collection_dict[key] \
+				if collection_dict.has(key) and collection_dict[key] is Dictionary \
+				else {})
+	
+	super(dict)
+
+
+# Override
 func should_show_children() -> bool:
 	return show_children
 

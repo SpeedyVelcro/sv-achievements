@@ -135,13 +135,26 @@ func reset_completion() -> void:
 ## Returns the completion state of the achievement as a JSON-serializable
 ## dictionary.
 func serialize_completion() -> Dictionary:
-	return {} # TODO
+	var dict := {}
+	
+	dict["unlocked"] = unlock_state
+	if objective != null:
+		dict["objective"] = objective.serialize_completion()
+	
+	return dict
 
 
 ## Restores the completion status of the achievement from a dictionary in
 ## the format created by [method serialize_completion]
 func deserialize_completion(dict: Dictionary):
-	pass # TODO
+	unlock_state = dict["unlocked"] \
+			if dict.has("unlocked") and dict["unlocked"] is bool \
+			else false
+	
+	if objective != null:
+		objective.deserialize_completion(dict["objective"] \
+				if dict.has("objective") and dict["objective"] is Dictionary \
+				else {})
 
 
 ## Returns progress if the top-level objective can be expressed as progress.

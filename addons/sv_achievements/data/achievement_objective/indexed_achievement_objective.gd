@@ -46,6 +46,27 @@ func count_complete() -> int:
 
 
 # Override
+func serialize_completion() -> Dictionary:
+	var dict := super()
+	dict["subobjectives"] = objectives.map(func (objective: AchievementObjective) -> Dictionary: return objective.serialize_completion())
+	return dict
+
+
+# Override
+func deserialize_completion(dict: Dictionary) -> void:
+	var array: Dictionary = dict["subobjectives"] \
+			if dict.has("subobjectives") and dict["subobjectives"] is Dictionary \
+			else {}
+	
+	for i in range(objectives.size()):
+		objectives[i].deserialize_completion(array[i] \
+				if i < array.size() and array[i] is Dictionary \
+				else {})
+	
+	super(dict)
+
+
+# Override
 func should_show_children() -> bool:
 	return show_children
 

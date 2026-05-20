@@ -8,12 +8,12 @@ extends AchievementObjective
 ## or equal to [member target] will complete the objective.
 var progress: float = 0.0:
 	set(value):
-		progress = value
+		_progress_internal = value
 		progress_changed.emit(value)
 		if value >= target:
 			complete()
 	get:
-		return progress
+		return _progress_internal
 
 ## Target to complete the objective. When [member progress] reaches this value,
 ## the objective will complete.
@@ -22,6 +22,8 @@ var progress: float = 0.0:
 ## Set to true to indicate that this objective should show a progress bar
 ## when displayed in a UI.
 @export var show_progress_bar: bool = true
+
+var _progress_internal: float = 0.0
 
 
 ## Increases the [progress] by the given value. This is equivalent to setting
@@ -37,6 +39,22 @@ func increase_to(value: float) -> void:
 		return
 	
 	progress = value
+
+
+# Override
+func serialize_completion() -> Dictionary:
+	var dict := super()
+	dict["progress"] = progress
+	return dict
+
+
+# Override
+func deserialize_completion(dict: Dictionary) -> void:
+	_progress_internal = float(dict["progress"]) \
+			if dict.has("progress") and (dict["progress"] is int or dict["progress"] is float) \
+			else 0.0
+	
+	super(dict)
 
 
 # Override

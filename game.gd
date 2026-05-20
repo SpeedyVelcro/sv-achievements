@@ -8,6 +8,7 @@ var _descending_progress: int = 0
 
 # Signal connection
 func _on_quit_button_pressed() -> void:
+	AchievementService.save_progress()
 	get_tree().quit()
 
 

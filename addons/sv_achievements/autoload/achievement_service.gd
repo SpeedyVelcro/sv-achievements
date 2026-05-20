@@ -40,10 +40,108 @@ func reset_completion() -> void:
 		achievement.reset_completion()
 
 
+## Save completion status and progress of all achievements to the JSON file configured in [ProjectSettings],
+## or to the given filepath if provided.
+##
+## AchievementService attempts to automatically call this when when the game exits, but
+## it can't detect calls to [code]get_tree().quit()[/code]. Therefore, you should call
+## this manually yourself when you are about to quit the game via code. You may also wish
+## to call this regularly whenever you save any other data, as good practice to avoid
+## data loss.
+func save_progress(file_path_override := "") -> void:
+	var settings_file_path := _get_settings_completion_file_path()
+	if settings_file_path.is_empty():
+		return # Already printed error
+	
+	var file_path = file_path_override if not file_path_override.is_empty() else settings_file_path
+	if not (file_path.is_absolute_path() or file_path.is_relative_path()):
+		push_error("The provided file path override is not a valid filename.")
+		return
+	
+	var serialized := {}
+	for achievement in achievements:
+		serialized[achievement.achievement_id] = achievement.serialize_completion()
+	
+	DirAccess.make_dir_recursive_absolute(file_path.get_base_dir())
+	
+	var file := FileAccess.open(file_path, FileAccess.WRITE)
+	if file == null:
+		push_error("Error opening file for write: %d" % FileAccess.get_open_error())
+		return
+	
+	var json := JSON.stringify(serialized, "\t")
+	file.store_string(json)
+	file.close()
+
+
+## Load the completion status and progress of all achievements from the JSON file configured in
+## [ProjectSettings], or from the given filepath if provided.
+func load_progress(file_path_override := "") -> void:
+	var settings_file_path := _get_settings_completion_file_path()
+	if settings_file_path.is_empty():
+		return # Already printed error
+	
+	var file_path = file_path_override if not file_path_override.is_empty() else settings_file_path
+	if not (file_path.is_absolute_path() or file_path.is_relative_path()):
+		push_error("The provided file path override is not a valid filename.")
+		return
+	
+	var file := FileAccess.open(file_path, FileAccess.READ)
+	if file == null:
+		var error := FileAccess.get_open_error()
+		match error:
+			Error.ERR_FILE_NOT_FOUND:
+				return # Likely first launch
+			_:
+				push_error("Error opening file for read: %d" % FileAccess.get_open_error())
+				return
+	
+	var json := file.get_as_text()
+	file.close()
+	
+	var parsed = JSON.parse_string(json)
+	if parsed is not Dictionary:
+		push_error("Failed to parse achievement progress save file. Did not return a Dictionary.")
+		return
+	
+	var dict: Dictionary = parsed
+	
+	for achievement in achievements:
+		if dict.has(achievement.achievement_id) and dict[achievement.achievement_id] is Dictionary:
+			achievement.deserialize_completion(dict[achievement.achievement_id])
+
+
+func _get_settings_completion_file_path() -> String:
+	var settings_filepath: Variant = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH)
+	var typed_settings_filepath: String
+	if settings_filepath is String and settings_filepath.is_absolute_path():
+		typed_settings_filepath = settings_filepath
+	else:
+		push_error("Achievement completion save file path setting is invalid.")
+		typed_settings_filepath = "" # Used as indication of error
+	return typed_settings_filepath
+
+
 # Override
 func _ready() -> void:
+	SVAchievementsProjectSettings.configure()
 	_load_achievements()
 	_connect_achievements()
+	load_progress()
+
+
+# Override
+func _notification(what: int) -> void:
+	# We can't detect calls to get_tree().quit(), but we can at least handle all ways of quitting
+	# through the OS here.
+	# See https://docs.godotengine.org/en/stable/tutorials/inputs/handling_quit_requests.html
+	
+	match what:
+		NOTIFICATION_WM_CLOSE_REQUEST, NOTIFICATION_APPLICATION_PAUSED, NOTIFICATION_CRASH:
+			save_progress()
+		NOTIFICATION_WM_GO_BACK_REQUEST:
+			if ProjectSettings.get_setting_with_override("application/config/quit_on_go_back"):
+				save_progress()
 
 
 func _load_achievements() -> void:

@@ -12,12 +12,14 @@ extends Resource
 ## emit [signal completed]
 var completion_state: bool = false:
 	set(value):
-		var previous_value = completion_state
-		completion_state = value
+		var previous_value = _completion_state_internal
+		_completion_state_internal = value
 		if value and not previous_value:
 			completed.emit()
 	get:
-		return completion_state
+		return _completion_state_internal
+
+var _completion_state_internal: bool = false
 
 ## Emitted when the objective is completed.
 signal completed
@@ -71,6 +73,22 @@ func get_progress_target() -> float:
 ## support subobjectives, it returns an empty array by default.
 func get_children() -> Array[AchievementObjective]:
 	return []
+
+
+## Returns a JSON-serializable [Dictionary] that contains the completion status
+## and progress towards completion of this objective.
+func serialize_completion() -> Dictionary:
+	return {
+		"complete": completion_state
+	}
+
+
+## Configures the progress and completion of this achievement objective
+## according to a [Dictionary] in the format returned by [method serialize_completion]
+func deserialize_completion(dict: Dictionary) -> void:
+	_completion_state_internal = bool(dict["complete"]) \
+			if dict.has("complete") and dict["complete"] is bool \
+			else false
 
 
 ## Returns a human-readable description of the objective. Unlike reading
