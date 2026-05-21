@@ -26,19 +26,26 @@ var progress: float = 0.0:
 var _progress_internal: float = 0.0
 
 
-## Increases the [progress] by the given value. This is equivalent to setting
+## Increases the [member progress] by the given value. This is equivalent to setting
 ## progress directly.
+## Increases the [member progress] by the given value, but only up to the target.
+## Just a convenience function is this is similar to setting progress
+## yourself.
 func increase(value: float) -> void:
-	progress += value
+	if progress >= target:
+		return
+	
+	progress = min(progress + value, target)
 
 
 ## Increases [member progress] to the given value. If you enter a value less
-## than the current progress, this method does nothing.
+## than or equal to the current progress, this method does nothing. The value
+## is also capped at the target.
 func increase_to(value: float) -> void:
-	if value < progress:
+	if value <= progress:
 		return
 	
-	progress = value
+	progress = min(value, target)
 
 
 # Override

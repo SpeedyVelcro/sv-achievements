@@ -27,19 +27,22 @@ var progress: int = 0:
 var _progress_internal: int = 0
 
 
-## Increase the progress by 1. Just a convenience function - equivalent to
-## incrementing [member progress] manually.
+## Increases the progress by 1 but only if the target hasn't been hit yet.
+## Just a convenience function - equivalent to checking and incrementing
+## [member progress] manually.
 func increment() -> void:
-	progress += 1
+	if progress < target:
+		progress += 1
 
 
 ## Increases [member progress] to the given value. If you enter a value less
-## than the current progress, this method does nothing.
+## than the current progress, this method does nothing. The value is also
+## capped at the target.
 func increase_to(value: int) -> void:
 	if value < progress:
 		return
 	
-	progress = value
+	progress = min(value, target)
 
 
 # Override
