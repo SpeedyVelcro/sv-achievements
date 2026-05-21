@@ -118,6 +118,7 @@ size_flags_vertical = 3
 [node name="AchievementListUI" parent="MarginContainer/AchievementListVBoxContainer/ScrollContainer" unique_id=40048756 instance=ExtResource("2_e2o6t")]
 layout_mode = 2
 size_flags_horizontal = 3
+bold_reward_titles = true
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/AchievementListVBoxContainer" unique_id=710891761]
 layout_mode = 2

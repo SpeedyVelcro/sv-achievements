@@ -2,15 +2,21 @@
 
 [ext_resource type="Script" uid="uid://bfkrw11bj6wk" path="res://addons/sv_achievements/data/achievement/achievement.gd" id="1_psorq"]
 [ext_resource type="Script" uid="uid://ce7vq51letive" path="res://addons/sv_achievements/data/achievement_objective/achievement_objective.gd" id="2_8y0yr"]
+[ext_resource type="Texture2D" uid="uid://cjmdwawfi1q34" path="res://image/achievement-button.svg" id="2_nmhlb"]
 [ext_resource type="Script" uid="uid://bncxequl7jw7t" path="res://addons/sv_achievements/data/achievement_objective/indexed_achievement_objective.gd" id="3_8y0yr"]
+[ext_resource type="Texture2D" uid="uid://dkxxpe74yx2js" path="res://image/achievement-all.svg" id="3_gsmep"]
 [ext_resource type="Script" uid="uid://dux30a2ax0nyt" path="res://addons/sv_achievements/data/achievement_list/achievement_list.gd" id="3_rg45g"]
 [ext_resource type="Script" uid="uid://cg0mxj1vgkvaa" path="res://addons/sv_achievements/data/achievement_objective/int_progress_achievement_objective.gd" id="4_rg45g"]
+[ext_resource type="Texture2D" uid="uid://fnw6dwdhkljd" path="res://image/achievement-10.svg" id="6_uibmq"]
+[ext_resource type="Texture2D" uid="uid://oysy3k5xabtn" path="res://image/achievement-up.svg" id="8_epu84"]
+[ext_resource type="Texture2D" uid="uid://dmtxa4xboiblh" path="res://image/achievement-down.svg" id="9_lkt0p"]
 
 [sub_resource type="Resource" id="Resource_xuvmq"]
 script = ExtResource("1_psorq")
 achievement_id = "click-any-button"
 name = "Button Clicker"
 description = "Click any button."
+icon = ExtResource("2_nmhlb")
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_rg45g"]
@@ -54,6 +60,7 @@ achievement_id = "click-every-button"
 name = "I'll Try Everything Once"
 objective = SubResource("Resource_uibmq")
 description = "Click every button at least once."
+icon = ExtResource("3_gsmep")
 show_objectives = true
 show_progress_bar = false
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
@@ -69,6 +76,8 @@ achievement_id = "click-buttons-10-times"
 name = "Button Masher"
 objective = SubResource("Resource_epu84")
 description = "Click buttons 10 times."
+reward_description = "The satisfaction of a job well done."
+icon = ExtResource("6_uibmq")
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_lkt0p"]
@@ -82,6 +91,7 @@ achievement_id = "click-ascending"
 name = "Easy as 1 2 3"
 objective = SubResource("Resource_lkt0p")
 description = "Click all the buttons in ascending order."
+icon = ExtResource("8_epu84")
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_o7nnt"]
@@ -96,6 +106,7 @@ achievement_id = "click-descending"
 name = "3 2 1 sa ysaE"
 objective = SubResource("Resource_o7nnt")
 description = "Click every button in descending order."
+icon = ExtResource("9_lkt0p")
 secret_name = true
 secret_description = true
 secret_reward = true
