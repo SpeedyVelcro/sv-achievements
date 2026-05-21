@@ -136,6 +136,7 @@ size_flags_vertical = 3
 [node name="AchievementListUI" parent="MarginContainer/AchievementListVBoxContainer/PanelContainer/VBoxContainer/MarginContainer/PanelContainer/ScrollContainer" unique_id=40048756 instance=ExtResource("2_e2o6t")]
 layout_mode = 2
 size_flags_horizontal = 3
+show_separators = true
 bold_reward_titles = true
 
 [node name="ReferenceRect" type="ReferenceRect" parent="MarginContainer/AchievementListVBoxContainer" unique_id=1644485174]

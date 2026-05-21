@@ -3,6 +3,17 @@ extends VBoxContainer
 ##
 ## Displays all achievements configured for SV achievements in a list.
 
+## Set to true to display [HSeparator]s between each achievement.
+@export var show_separators: bool = false:
+	set(value):
+		if value == show_separators:
+			return
+		show_separators = value
+		for node in _separator_nodes:
+			node.visible = show_separators
+	get:
+		return show_separators
+
 @export_category("Icons")
 ## Set to true to display achievement icons. [member default_achievement_icon]
 ## should be set if not every achievement has its own icon.
@@ -207,12 +218,20 @@ extends VBoxContainer
 		return objective_list_indent_size
 
 var _achievement_nodes: Array[Control] = []
+var _separator_nodes: Array[HSeparator] = []
 
 var _achievement_scene := preload("res://addons/sv_achievements/ui/achievement_list_ui/achievement_ui/achievement_ui.tscn")
 
 
 func _ready() -> void:
+	var first := true
+	
 	for achievement: Achievement in AchievementService.achievements:
+		if not first:
+			var separator = HSeparator.new()
+			separator.visible = show_separators
+			add_child(separator)
+		
 		var ui := _achievement_scene.instantiate()
 		
 		ui.achievement = achievement
@@ -235,3 +254,5 @@ func _ready() -> void:
 		ui.size_flags_horizontal = SizeFlags.SIZE_EXPAND_FILL
 		
 		add_child(ui)
+		
+		first = false
