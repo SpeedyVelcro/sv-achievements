@@ -164,6 +164,7 @@ layout_mode = 2
 text = "Reset Achievements"
 
 [node name="AchievementOverlay" parent="." unique_id=1634175387 instance=ExtResource("3_feb5d")]
+popup_size = Vector2i(480, 0)
 default_achievement_icon = ExtResource("3_7jktm")
 
 [connection signal="pressed" from="MarginContainer/GameVBoxContainer/GridContainer/Button1" to="." method="_on_button_1_pressed"]

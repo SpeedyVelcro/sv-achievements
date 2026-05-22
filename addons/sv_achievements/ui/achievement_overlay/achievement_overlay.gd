@@ -20,8 +20,10 @@ enum PopupAnimation {
 ## Corner of the scene to display achievement popups in.
 @export var corner: SceneCorner
 
-## Size of each achievement popup
-@export var popup_size: Vector2i = Vector2(480.0, 160.0)
+## Custom minimum size of each achievement popup. It is recommended that you
+## set the y dimension to 0, so that the actual vertical size gets calculated
+## by the size of the icon and other contents of the popup.
+@export var popup_size: Vector2i = Vector2(480.0, 0.0)
 
 ## Vertical separation between each achievement popup
 @export var popup_separation: float = 16.0
@@ -164,11 +166,10 @@ func popup(achievement: Achievement) -> void:
 			popup.grow_vertical = Control.GROW_DIRECTION_BEGIN
 	
 	popup.custom_minimum_size = popup_size
-	popup.size = popup_size
 	
 	popup.set_anchors_and_offsets_preset(_get_layout_preset(corner), Control.LayoutPresetMode.PRESET_MODE_KEEP_SIZE)
-	popup.offset_top = _get_popup_top_anchor_offset(corner, index)
-	popup.offset_bottom = _get_popup_bottom_anchor_offset(corner, index)
+	popup.offset_top = _get_popup_top_anchor_offset(corner, index, popup.get_minimum_size())
+	popup.offset_bottom = _get_popup_bottom_anchor_offset(corner, index, popup.get_minimum_size())
 	
 	match popup_animation:
 		PopupAnimation.INSTANT:
@@ -179,8 +180,8 @@ func popup(achievement: Achievement) -> void:
 		PopupAnimation.FLY:
 			var target_top := popup.offset_top
 			var target_bottom := popup.offset_bottom
-			var off_screen_top = _get_popup_off_screen_top_anchor_offset(corner, index)
-			var off_screen_bottom = _get_popup_off_screen_bottom_anchor_offset(corner, index)
+			var off_screen_top = _get_popup_off_screen_top_anchor_offset(corner, index, popup.get_minimum_size())
+			var off_screen_bottom = _get_popup_off_screen_bottom_anchor_offset(corner, index, popup.get_minimum_size())
 			
 			popup.offset_top = off_screen_top
 			popup.offset_bottom = off_screen_bottom
@@ -297,10 +298,10 @@ func _get_layout_preset(corner: SceneCorner) -> Control.LayoutPreset:
 			return Control.LayoutPreset.PRESET_TOP_LEFT
 
 
-func _get_popup_off_screen_top_anchor_offset(corner: SceneCorner, index: int) -> float:
+func _get_popup_off_screen_top_anchor_offset(corner: SceneCorner, index: int, for_size: Vector2) -> float:
 	match corner:
 		SceneCorner.TOP_LEFT, SceneCorner.TOP_RIGHT:
-			return -(_get_top_margin_size()) - _OFF_SCREEN_PADDING - popup_size.y
+			return -(_get_top_margin_size()) - _OFF_SCREEN_PADDING - for_size.y
 		SceneCorner.BOTTOM_LEFT, SceneCorner.BOTTOM_RIGHT:
 			return _get_bottom_margin_size() + _OFF_SCREEN_PADDING
 		_:
@@ -308,34 +309,34 @@ func _get_popup_off_screen_top_anchor_offset(corner: SceneCorner, index: int) ->
 			return 0.0
 
 
-func _get_popup_off_screen_bottom_anchor_offset(corner: SceneCorner, index: int) -> float:
+func _get_popup_off_screen_bottom_anchor_offset(corner: SceneCorner, index: int, for_size: Vector2) -> float:
 	match corner:
 		SceneCorner.TOP_LEFT, SceneCorner.TOP_RIGHT:
 			return -(_get_top_margin_size()) - _OFF_SCREEN_PADDING
 		SceneCorner.BOTTOM_LEFT, SceneCorner.BOTTOM_RIGHT:
-			return _get_bottom_margin_size() + _OFF_SCREEN_PADDING + popup_size.y
+			return _get_bottom_margin_size() + _OFF_SCREEN_PADDING + for_size.y
 		_:
 			push_error("Invalid corner enum for achievement popup off-screen bottom anchor offset")
 			return 0.0
 
 
-func _get_popup_top_anchor_offset(corner: SceneCorner, index: int) -> float:
+func _get_popup_top_anchor_offset(corner: SceneCorner, index: int, for_size: Vector2) -> float:
 	match corner:
 		SceneCorner.TOP_LEFT, SceneCorner.TOP_RIGHT:
-			return 0.0 + (index * popup_separation) + (index * popup_size.y)
+			return 0.0 + (index * popup_separation) + (index * for_size.y)
 		SceneCorner.BOTTOM_LEFT, SceneCorner.BOTTOM_RIGHT:
-			return popup_size.y + (index * popup_separation) + (index * popup_size.y)
+			return for_size.y + (index * popup_separation) + (index * for_size.y)
 		_:
 			push_error("Invalid corner enum for achievement popup top anchor offset")
 			return 0.0
 
 
-func _get_popup_bottom_anchor_offset(corner: SceneCorner, index: int) -> float:
+func _get_popup_bottom_anchor_offset(corner: SceneCorner, index: int, for_size: Vector2) -> float:
 	match corner:
 		SceneCorner.TOP_LEFT, SceneCorner.TOP_RIGHT:
-			return popup_size.y - (index * popup_separation) - (index * popup_size.y)
+			return for_size.y - (index * popup_separation) - (index * for_size.y)
 		SceneCorner.BOTTOM_LEFT, SceneCorner.BOTTOM_RIGHT:
-			return 0.0 - (index * popup_separation) - (index * popup_size.y)
+			return 0.0 - (index * popup_separation) - (index * for_size.y)
 		_:
 			push_error("Invalid corner enum for achievement popup bottom anchor offset")
 			return 0.0
