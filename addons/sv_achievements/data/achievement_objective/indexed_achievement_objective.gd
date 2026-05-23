@@ -54,9 +54,9 @@ func serialize_completion() -> Dictionary:
 
 # Override
 func deserialize_completion(dict: Dictionary) -> void:
-	var array: Dictionary = dict["subobjectives"] \
-			if dict.has("subobjectives") and dict["subobjectives"] is Dictionary \
-			else {}
+	var array: Array = dict["subobjectives"] \
+			if dict.has("subobjectives") and dict["subobjectives"] is Array \
+			else []
 	
 	for i in range(objectives.size()):
 		objectives[i].deserialize_completion(array[i] \
