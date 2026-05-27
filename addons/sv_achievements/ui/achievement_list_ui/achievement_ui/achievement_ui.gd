@@ -192,7 +192,6 @@ var _default_grayscale_shader: ShaderMaterial = preload("res://addons/sv_achieve
 # Override
 func _ready() -> void:
 	_display_achievement()
-	# TODO: Connect signals
 	
 	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
 	var enable_sync: bool = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
@@ -217,6 +216,7 @@ func _display_achievement() -> void:
 	_update_reward()
 	_update_progress()
 	_update_objective_list()
+	_update_sync_button()
 
 
 func _update_icon() -> void:
@@ -344,6 +344,18 @@ func _update_icon_spacer() -> void:
 	# But we also don't want to add un-necessary space between achievements if
 	# they're not visible, hence setting this conditionally.
 	_icon_spacer.visible = _progress_bar.visible or _objective_container.visible
+
+
+func _update_sync_button() -> void:
+	if _sync_button == null:
+		return
+	
+	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
+	var allow_locked_sync: bool = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
+		else false
+	
+	_sync_button.disabled = not (achievement.is_unlocked() or allow_locked_sync)
 
 
 func _connect_signals() -> void:

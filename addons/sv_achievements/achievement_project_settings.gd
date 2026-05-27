@@ -38,3 +38,19 @@ static func configure() -> void:
 		"name": SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH,
 		"type": TYPE_STRING
 	})
+	
+	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH):
+		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH, false)
+	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH, false)
+	ProjectSettings.add_property_info({
+		"name": SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH,
+		"type": TYPE_BOOL
+	})
+	
+	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH):
+		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH, false)
+	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH, false)
+	ProjectSettings.add_property_info({
+		"name": SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH,
+		"type": TYPE_BOOL
+	})

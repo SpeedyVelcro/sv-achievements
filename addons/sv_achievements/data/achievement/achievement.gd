@@ -92,6 +92,14 @@ extends Resource
 ## achievement level to avoid confusion)
 @export var show_progress_bar: bool = true
 
+@export_group("API Info")
+## ID of the corresponding medal on Newgrounds.
+@export var newgrounds_id: int = -1
+
+## Extra field that you can use to store API info when using custom API adapters.
+@export var custom_api_info: Variant
+
+
 ## If this is true, the player has completed the achievement. You may force-unlock
 ## the achievement by setting this to true, or using [method unlock]
 var unlock_state: bool = false:

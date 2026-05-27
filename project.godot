@@ -35,3 +35,4 @@ rendering_device/driver.windows="d3d12"
 
 general/achievements="uid://v485otg4b2ee"
 general/completion_save_file_path="user://achievements.json"
+general/enable_sync=true
