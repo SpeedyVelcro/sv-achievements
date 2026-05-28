@@ -15,6 +15,7 @@ extends AchievementSyncAdapter
 func sync_one_way(achievement: Achievement) -> void:
 	_unlock_trophy(achievement)
 
+
 # Override
 func sync_two_way(achievement: Achievement) -> void:
 	# Game Jolt trophies do not support progress; only unlock state.

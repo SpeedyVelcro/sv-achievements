@@ -1,0 +1,135 @@
+name: Build, Test and Publish
+on:
+  push:
+    branches:
+      - "*"
+  release:
+    types: [published]
+
+env:
+  GODOT_VERSION: "4.6-stable"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Unencrypted
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v5
+      - name: Install Godot Engine
+        uses: "./.github/actions/install-godot"
+        with:
+          version: "4.6-stable"
+          sha_256: "6bcc59dfd1d670e918c77eae06e82b9dc5699de13d353dc3a4b3b6b307b6dc06"
+          platform: "linux.x86_64"
+      - name: Install Export Templates
+        uses: "./.github/actions/install-export-templates"
+        with:
+          version: "4.6-stable"
+          sha_256: "3b30ac8c1772f25f5dfa5f65922cab0a90e7b960176891237c5772515ebccc46"
+      - name: Build Example Game
+        run: make
+      - name: Upload Example Game Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-game-linux
+          path: build/linux
+      - name: Build Example Mods
+        run: make example-mods
+      - name: Upload Example Mods Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-mods
+          path: |
+            example-mods/*/build
+            !example-mods/*/build/.gdignore
+  build:
+    name: Build Encrypted
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v5
+      - name: Install Godot Engine
+        uses: "./.github/actions/install-godot"
+        with:
+          version: "4.6-stable"
+          sha_256: "6bcc59dfd1d670e918c77eae06e82b9dc5699de13d353dc3a4b3b6b307b6dc06"
+          platform: "linux.x86_64"
+      - name: Build Export Templates
+        uses: "./.github/actions/build-export-templates"
+        with:
+          version: "4.6-stable"
+          sha_256: "3b30ac8c1772f25f5dfa5f65922cab0a90e7b960176891237c5772515ebccc46"
+          pck_encryption_aes_256_key: ${{ secrets.PCK_ENCRYPTION_AES_256_KEY }}
+      - name: Build Example Game
+        run: make
+      - name: Upload Example Game Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-game-linux
+          path: build/linux
+      - name: Build Example Mods
+        run: make example-mods
+      - name: Upload Example Mods Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-mods
+          path: |
+            example-mods/*/build
+            !example-mods/*/build/.gdignore
+#  test:
+#    name: Run Tests
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout Repo
+#        uses: actions/checkout@v5
+#      - name: Run gdUnit4 Tests
+#        uses: MikeSchulze/gdUnit4-action@v1
+#        with:
+#          godot-version: "4.6"
+#          godot-status: "stable"
+#          paths: |
+#            res://test
+#          version: "v6.1.1"
+#          publish-report: false # true causes failure due to read-only permission
+  publish:
+    name: Publish release
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Download example game (all platforms)
+        uses: actions/download-artifact@v8
+        with:
+          pattern: example-game-*
+          skip-decompress: true
+          merge-multiple: true
+      - name: Download example mods
+        uses: actions/download-artifact@v8
+        with:
+          name: "example-mods"
+          skip-decompress: true
+          merge-multiple: true
+      - name: Release artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload \
+            "${{ github.ref_name }}" \
+            example-game-*.* \
+            example-mods.* \
+            --repo "${{ github.repository }}"
+      - name: Checkout Repo
+        uses: actions/checkout@v5
+      - name: Copy patch notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release edit \
+            "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --notes-file release-notes/$(if [ -f release-notes/${{ github.ref_name }}.md ]; then echo "${{ github.ref_name }}.md"; else echo "latest.md"; fi)
+

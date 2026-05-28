@@ -1,0 +1,61 @@
+name: Build Export Templates
+description: Builds export templates for the Godot Engine and make them available for the duration of the current job.
+inputs:
+  version:
+    description: "Version, e.g. 4.6-stable"
+    required: true
+  pck_encryption_aes_256_key:
+    description: "AES-256 key to use for PCK encryption. Leave blank if not using encryption."
+    required: false
+    default: ""
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Godot repo
+      uses: actions/checkout@v5
+      with:
+        repository: "godotengine/godot"
+        ref: "${{ inputs.version }}"
+        path: "godot-repo"
+    - shell: "bash"
+      env:
+        TEMPLATES_ZIP: "Godot_v${{ inputs.version }}_export_templates.tpz" # Does not work with mono builds as they have a separate template archive
+      run: |
+        cd godot-repo
+        if [ -z "${{ inputs.pck_encryption_aes_256_key }} ]];" ]; then export SCRIPT_AES256_ENCRYPTION_KEY="${{ inputs.pck_encryption_aes_256_key }}"; fi
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          scons \
+          pkg-config \
+          libx11-dev \
+          libxcursor-dev \
+          libxinerama-dev \
+          libgl1-mesa-dev \
+          libglu1-mesa-dev \
+          libasound2-dev \
+          libpulse-dev \
+          libudev-dev \
+          libxi-dev \
+          libxrandr-dev \
+          libwayland-dev
+        scons platform=linuxbsd target=template_release arch=x86_32
+        scons platform=linuxbsd target=template_debug arch=x86_32
+        scons platform=linuxbsd target=template_release arch=x86_64
+        mv bin/godot.linuxbsd.template_release.x86_64 bin/linux_release.x86_64
+        scons platform=linuxbsd target=template_debug arch=x86_64
+        mv bin/godot.linuxbsd.template_debug.x86_64 bin/linux_debug.x86_64
+        VERSION=${{ inputs.version }} # So it can be used in shell parameter expansion
+        VERSION_DIR=${VERSION/%-stable/.stable} # TODO: unsure what the transformation is for non-stable releases
+        TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/$VERSION_DIR"
+        mv ./bin/* $TEMPLATES_DIR
+        curl -LO "https://github.com/godotengine/godot/releases/download/${{ inputs.version }}/${{ env.TEMPLATES_ZIP }}"
+        echo "${{ inputs.sha_256 }} ${{ env.TEMPLATES_ZIP }}" | sha256sum -c
+        unzip ${{ env.TEMPLATES_ZIP }} # .tpz is just a renamed zip, see https://docs.godotengine.org/en/stable/tutorials/export/exporting_projects.html#export-templates
+        rm ${{ env.TEMPLATES_ZIP }}
+        mkdir -p $TEMPLATES_DIR
+        mv ./templates/* $TEMPLATES_DIR
+        rm -rf ./templates
+        cd ..
+        rm -rf godot-repo
+
