@@ -23,6 +23,14 @@ static func configure() -> void:
 		"hint_string": "*.tres,*.res"
 	})
 	
+	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH):
+		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH, SVAchievementsConstants.SETTINGS_DEFAULT_COMPLETION_SAVE_FILE_PATH)
+	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_ACHIEVEMENTS_PATH, SVAchievementsConstants.SETTINGS_DEFAULT_COMPLETION_SAVE_FILE_PATH)
+	ProjectSettings.add_property_info({
+		"name": SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH,
+		"type": TYPE_STRING
+	})
+	
 	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH):
 		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH, false)
 	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH, false)
@@ -31,12 +39,24 @@ static func configure() -> void:
 		"type": TYPE_BOOL
 	})
 	
-	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH):
-		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH, SVAchievementsConstants.SETTINGS_DEFAULT_COMPLETION_SAVE_FILE_PATH)
-	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_ACHIEVEMENTS_PATH, SVAchievementsConstants.SETTINGS_DEFAULT_COMPLETION_SAVE_FILE_PATH)
+	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ACHIEVEMENT_API_PATH):
+		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_ACHIEVEMENT_API_PATH, SVAchievementsConstants.AchievementAPI.NONE)
+	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_ACHIEVEMENT_API_PATH, SVAchievementsConstants.AchievementAPI.NONE)
 	ProjectSettings.add_property_info({
-		"name": SVAchievementsConstants.SETTINGS_COMPLETION_SAVE_FILE_PATH_PATH,
-		"type": TYPE_STRING
+		"name": SVAchievementsConstants.SETTINGS_ACHIEVEMENT_API_PATH,
+		"type": TYPE_INT,
+		"hint": PROPERTY_HINT_ENUM,
+		"hint_string": _enum_to_hint_string(SVAchievementsConstants.AchievementAPI)
+	})
+	
+	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_CUSTOM_ACHIEVEMENT_SYNC_ADAPTER_PATH_PATH):
+		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_CUSTOM_ACHIEVEMENT_SYNC_ADAPTER_PATH_PATH, "")
+	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_CUSTOM_ACHIEVEMENT_SYNC_ADAPTER_PATH_PATH, "")
+	ProjectSettings.add_property_info({
+		"name": SVAchievementsConstants.SETTINGS_CUSTOM_ACHIEVEMENT_SYNC_ADAPTER_PATH_PATH,
+		"type": TYPE_STRING,
+		"hint": PROPERTY_HINT_FILE,
+		"hint_string": "*.gd"
 	})
 	
 	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH):
@@ -54,3 +74,12 @@ static func configure() -> void:
 		"name": SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH,
 		"type": TYPE_BOOL
 	})
+
+
+static func _enum_to_hint_string(enum_dict: Dictionary) -> String:
+	var hint_string := ""
+	for key in enum_dict.keys():
+		if not hint_string.is_empty():
+			hint_string += ","
+		hint_string += "%s:%d" % [key.capitalize(), enum_dict[key]]
+	return hint_string

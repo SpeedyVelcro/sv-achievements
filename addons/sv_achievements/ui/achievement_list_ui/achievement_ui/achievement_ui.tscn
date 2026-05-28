@@ -120,3 +120,5 @@ title = "Checklist"
 [node name="ObjectiveListUI" parent="VBoxContainer/ObjectiveFoldableContainer" unique_id=1732672958 instance=ExtResource("3_8hcwh")]
 visible = false
 layout_mode = 2
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/VBoxContainer2/HBoxContainer/SyncButton" to="." method="_on_sync_button_pressed"]

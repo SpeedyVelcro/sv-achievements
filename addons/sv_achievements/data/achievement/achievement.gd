@@ -118,6 +118,10 @@ signal unlocked
 signal progress_changed(value: float)
 ## Emitted when the achievement is reset using [method reset_completion]
 signal reset
+## Emitted when sync is requested by calling [method sync]. Note that there are other
+## times you will likely want to sync, e.g. when [signal unlocked] or [signal progress_changed]
+## are called, so consumers should listen to those signals as well.
+signal sync_requested
 
 
 ## Completes the achievement. Equivalent to setting [member unlock_state] to
@@ -191,6 +195,16 @@ func should_show_progress_bar() -> bool:
 		return false
 	
 	return show_progress_bar and objective.is_progress_type()
+
+
+## Call to synchronize this achievement with the achievement API, provided that
+## [ProjectSettings] is correctly configured to allow synchronisation. (Does
+## nothing if sync is disabled)
+##
+## This is done by emitting a signal so if AchievementService doesn't "own" this
+## achievement it will also do nothing.
+func request_sync() -> void:
+	sync_requested.emit()
 
 
 func _connect_objective() -> void:

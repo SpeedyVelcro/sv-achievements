@@ -176,6 +176,86 @@ func _load_achievements() -> void:
 	print("Loaded %d achievement(s)." % achievements.size())
 
 
+## Synchronizes the achievement with the given id by calling the achievement
+## API to unlock it or update its progress. Behaviour depends on sync configuration
+## in [ProjectSettings], which will determine whether this is a one-way or two-way
+## sync, which API to use, and whether the achievement will actually be synced
+## at all. (If sync is disabled, just fails silently.)
+func sync_achievement(id: String) -> void:
+	sync_given_achievement(get_achievement(id))
+
+
+## Similar to [method sync_achievement], but allows you to sync a provided achievement
+## without it needing to be registered.
+func sync_given_achievement(achievement: Achievement) -> void:
+	if not _is_sync_enabled():
+		return
+	
+	if (not _is_locked_sync_allowed()) and (not achievement.is_unlocked()):
+		return
+	
+	var adapter := _get_achievement_sync_adapter()
+	
+	if adapter == null:
+		return
+	
+	if _is_sync_two_way():
+		adapter.sync_two_way(achievement)
+	else:
+		adapter.sync_one_way(achievement)
+
+
+# TODO: Most of this settings methods can probably be moved to a helper class -
+# possibly the already-existing achievement_project_settings.gd
+func _is_sync_enabled() -> bool:
+	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
+	return ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
+		else false
+
+
+func _is_locked_sync_allowed() -> bool:
+	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
+	return ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
+		else false
+
+
+func _is_sync_two_way() -> bool:
+	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
+	return ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH) \
+		else false
+
+
+func _get_achievement_sync_adapter() -> AchievementSyncAdapter:
+	var api: SVAchievementsConstants.AchievementAPI = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ACHIEVEMENT_API_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ACHIEVEMENT_API_PATH) \
+		else SVAchievementsConstants.AchievementAPI.NONE
+	
+	var adapter_path: String = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_CUSTOM_ACHIEVEMENT_SYNC_ADAPTER_PATH_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_CUSTOM_ACHIEVEMENT_SYNC_ADAPTER_PATH_PATH) \
+		else ""
+	
+	match api:
+		SVAchievementsConstants.AchievementAPI.NEWGROUNDS:
+			return NewgroundsAchievementSyncAdapter.new()
+		SVAchievementsConstants.AchievementAPI.CUSTOM:
+			if adapter_path.is_empty() or not adapter_path.is_absolute_path() or adapter_path.get_extension().to_lower() != "gd":
+				push_error("Adapter path in ProjectSettings is invalid path. Achievement sync will not work.")
+				return null
+			var adapter = load(adapter_path)
+			if adapter is not AchievementSyncAdapter or adapter == null:
+				push_error("Failed to load sync adapter. Achievement sync will not work.")
+				return null
+			return adapter
+		SVAchievementsConstants.AchievementAPI.NONE:
+			return null
+		_:
+			push_error("Invalid achievement API setting. Achievement sync will not work.")
+			return null
+
+
 func _connect_achievements() -> void:
 	for achievement in achievements:
 		achievement.unlocked.connect(_on_achievement_unlocked.bind(achievement))
@@ -189,8 +269,14 @@ func _disconnect_achievements() -> void:
 		connection["signal"].disconnect(connection["callable"])
 
 
+# Signal connection
 func _on_achievement_unlocked(achievement: Achievement) -> void:
 	achievement_unlocked.emit(achievement)
+
+
+# Signal connection
+func _on_achievement_sync_requested(achievement: Achievement) -> void:
+	sync_given_achievement(achievement)
 
 # Override
 func _exit_tree() -> void:

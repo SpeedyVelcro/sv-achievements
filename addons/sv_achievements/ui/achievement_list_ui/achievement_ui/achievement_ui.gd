@@ -401,6 +401,11 @@ func _on_achievement_reset() -> void:
 	_update_progress()
 
 
+# Signal connection
+func _on_sync_button_pressed() -> void:
+	achievement.request_sync()
+
+
 # Override
 func _exit_tree() -> void:
 	_disconnect_signals()
