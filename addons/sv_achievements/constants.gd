@@ -11,10 +11,14 @@ enum AchievementAPI {
 	## sure to set your new class in [ProjectSettings].
 	CUSTOM = 0,
 	# Reserved: STEAM = 1
-	## Use the godot-newgrounds-4 plugin by Aksel and contributors from
+	## Use the godot-newgrounds-4 plugin v1.x by Aksel and contributors from
 	## [url]https://github.com/jefvel/newgrounds-godot-4[/url]. Ensure the addon
 	## is installed in your project.
-	NEWGROUNDS = 2
+	NEWGROUNDS = 2,
+	## Use the game-jolt-api plugin v0.0.8 (and possibly above) by Joel Gomes da Silva from
+	## [url]https://github.com/murikistudio/game-jolt-api[/url]. Ensure the addon
+	## is installed in your project.
+	GAME_JOLT = 3
 }
 
 const _SETTINGS_PLUGIN_PATH := "sv_achievements"

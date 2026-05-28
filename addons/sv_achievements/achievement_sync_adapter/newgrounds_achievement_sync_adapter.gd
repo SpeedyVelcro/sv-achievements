@@ -40,5 +40,7 @@ func _get_newgrounds_medal_unlocker_class() -> GDScript:
 	return class_script
 
 
+# Dynamic retrieval to avoid compile errors for users that are not using Newgrounds
+# or this adapter.
 func _get_ng_autoload() -> Node:
 	return Engine.get_main_loop().root.get_node("NG")

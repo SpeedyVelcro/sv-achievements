@@ -96,6 +96,9 @@ extends Resource
 ## ID of the corresponding medal on Newgrounds.
 @export var newgrounds_id: int = -1
 
+## ID of the corresponding trophy on Game Jolt. Should be either a String or an int.
+@export var game_jolt_id: Variant
+
 ## Extra field that you can use to store API info when using custom API adapters.
 @export var custom_api_info: Variant
 
