@@ -240,6 +240,8 @@ func _get_achievement_sync_adapter() -> AchievementSyncAdapter:
 	match api:
 		SVAchievementsConstants.AchievementAPI.NEWGROUNDS:
 			return NewgroundsAchievementSyncAdapter.new()
+		SVAchievementsConstants.AchievementAPI.GAME_JOLT:
+			return GameJoltAchievementSyncAdapter.new()
 		SVAchievementsConstants.AchievementAPI.CUSTOM:
 			if adapter_path.is_empty() or not adapter_path.is_absolute_path() or adapter_path.get_extension().to_lower() != "gd":
 				push_error("Adapter path in ProjectSettings is invalid path. Achievement sync will not work.")
@@ -272,6 +274,7 @@ func _disconnect_achievements() -> void:
 # Signal connection
 func _on_achievement_unlocked(achievement: Achievement) -> void:
 	achievement_unlocked.emit(achievement)
+	sync_given_achievement(achievement)
 
 
 # Signal connection
