@@ -128,7 +128,8 @@ func _ready() -> void:
 	_load_achievements()
 	_connect_achievements()
 	load_progress()
-	sync_all_achievements()
+	if _is_auto_sync_on_start():
+		sync_all_achievements()
 
 
 # Override
@@ -251,6 +252,12 @@ func _is_sync_two_way() -> bool:
 		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH) \
 		else false
 
+func _is_auto_sync_on_start() -> bool:
+	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
+	return ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_AUTO_SYNC_ON_START_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_AUTO_SYNC_ON_START_PATH) \
+		else false
+
 
 func _get_achievement_sync_adapter() -> AchievementSyncAdapter:
 	var api: SVAchievementsConstants.AchievementAPI = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ACHIEVEMENT_API_PATH) \
@@ -285,6 +292,7 @@ func _get_achievement_sync_adapter() -> AchievementSyncAdapter:
 func _connect_achievements() -> void:
 	for achievement in achievements:
 		achievement.unlocked.connect(_on_achievement_unlocked.bind(achievement))
+		achievement.sync_requested.connect(_on_achievement_sync_requested.bind(achievement))
 
 
 func _disconnect_achievements() -> void:

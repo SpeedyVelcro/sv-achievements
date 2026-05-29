@@ -10,12 +10,20 @@ extends AchievementSyncAdapter
 
 # Override
 func sync_one_way(achievement: Achievement) -> void:
+	if achievement.newgrounds_id < 0:
+		push_error("Achievement %s does not have a newgrounds id." % achievement.achievement_id)
+		return
+	
 	if achievement.is_unlocked():
 		_get_ng_autoload().medal_unlock(achievement.newgrounds_id)
 
 
 # Override
 func sync_two_way(achievement: Achievement) -> void:
+	if achievement.newgrounds_id < 0:
+		push_error("Achievement %s does not have a newgrounds id." % achievement.achievement_id)
+		return
+	
 	if achievement.is_unlocked():
 		sync_one_way(achievement)
 		return

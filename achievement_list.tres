@@ -17,6 +17,9 @@ achievement_id = "click-any-button"
 name = "Button Clicker"
 description = "Click any button."
 icon = ExtResource("2_nmhlb")
+newgrounds_id = 90363
+game_jolt_id = 301610
+custom_api_info = null
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_rg45g"]
@@ -63,6 +66,8 @@ description = "Click every button at least once."
 icon = ExtResource("3_gsmep")
 show_objectives = true
 show_progress_bar = false
+game_jolt_id = null
+custom_api_info = null
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_epu84"]
@@ -78,6 +83,8 @@ objective = SubResource("Resource_epu84")
 description = "Click buttons 10 times."
 reward_description = "The satisfaction of a job well done."
 icon = ExtResource("6_uibmq")
+game_jolt_id = null
+custom_api_info = null
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_lkt0p"]
@@ -92,6 +99,8 @@ name = "Easy as 1 2 3"
 objective = SubResource("Resource_lkt0p")
 description = "Click all the buttons in ascending order."
 icon = ExtResource("8_epu84")
+game_jolt_id = null
+custom_api_info = null
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [sub_resource type="Resource" id="Resource_o7nnt"]
@@ -112,6 +121,8 @@ secret_description = true
 secret_reward = true
 secret_icon = true
 show_progress_bar = false
+game_jolt_id = null
+custom_api_info = null
 metadata/_custom_type_script = "uid://bfkrw11bj6wk"
 
 [resource]
