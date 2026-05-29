@@ -74,6 +74,14 @@ static func configure() -> void:
 		"name": SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH,
 		"type": TYPE_BOOL
 	})
+	
+	if not ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_AUTO_SYNC_ON_START_PATH):
+		ProjectSettings.set_setting(SVAchievementsConstants.SETTINGS_AUTO_SYNC_ON_START_PATH, false)
+	ProjectSettings.set_initial_value(SVAchievementsConstants.SETTINGS_AUTO_SYNC_ON_START_PATH, false)
+	ProjectSettings.add_property_info({
+		"name": SVAchievementsConstants.SETTINGS_AUTO_SYNC_ON_START_PATH,
+		"type": TYPE_BOOL
+	})
 
 
 static func _enum_to_hint_string(enum_dict: Dictionary) -> String:

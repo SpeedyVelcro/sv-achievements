@@ -51,6 +51,9 @@ const SETTINGS_ALLOW_LOCKED_SYNC_PATH := _SETTINGS_SYNC_PATH + "/allow_locked_sy
 ## achievement objectives (collection and indexed objectives are particularly
 ## uncommon on achievement backends.)
 const SETTINGS_TWO_WAY_SYNC_PATH := _SETTINGS_SYNC_PATH + "/two_way_sync"
+## Path to the setting in [ProjectSettings] that causes AchievementService to
+## automatically sync all achievements on start after loading them.
+const SETTINGS_AUTO_SYNC_ON_START_PATH := _SETTINGS_SYNC_PATH + "/auto_sync_on_start"
 
 ## Default value for the path to the file that stores the user's achievement
 ## progress.

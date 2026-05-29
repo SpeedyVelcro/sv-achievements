@@ -128,6 +128,7 @@ func _ready() -> void:
 	_load_achievements()
 	_connect_achievements()
 	load_progress()
+	sync_all_achievements()
 
 
 # Override
@@ -203,6 +204,29 @@ func sync_given_achievement(achievement: Achievement) -> void:
 		adapter.sync_two_way(achievement)
 	else:
 		adapter.sync_one_way(achievement)
+
+
+## Syncs all achievements. See [method sync_achievement]
+func sync_all_achievements() -> void:
+	sync_given_achievements(achievements)
+
+
+func sync_given_achievements(achievements: Array[Achievement]) -> void:
+	if not _is_sync_enabled():
+		return
+	
+	var to_sync: Array[Achievement] = achievements.filter(func(achievement: Achievement) -> bool: \
+			return achievement.is_unlocked() or _is_locked_sync_allowed())
+	
+	var adapter := _get_achievement_sync_adapter()
+	
+	if adapter == null:
+		return
+	
+	if _is_sync_two_way():
+		adapter.two_way_sync_multiple(achievements)
+	else:
+		adapter.one_way_sync_multiple(achievements)
 
 
 # TODO: Most of this settings methods can probably be moved to a helper class -
