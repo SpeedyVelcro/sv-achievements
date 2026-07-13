@@ -12,3 +12,6 @@ Requires Godot 4.6
 - Create an `AchievementList` resource
 - Add the `AchievementList` to your project settings under
   `Sv Achievements > General > Achievements`.
+
+## License
+See [`LICENSE.txt`](LICENSE.txt)
