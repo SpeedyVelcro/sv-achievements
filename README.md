@@ -2,6 +2,9 @@
 Achievements framework and related UI elements for the Godot Engine. Currently
 a work in progress.
 
+![Screenshot of an achievement popup](readme_screenshot_popup.png)
+![Screnshot of an achievement list UI](readme_screenshot_menu.png)
+
 ## Dependencies
 Requires Godot 4.6
 
