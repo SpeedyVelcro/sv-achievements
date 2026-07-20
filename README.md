@@ -1,6 +1,5 @@
 # SV Achievements
-Achievements framework and related UI elements for the Godot Engine. Currently
-a work in progress.
+Achievements framework and related UI elements for the Godot Engine.
 
 ![Screenshot of an achievement popup](readme_screenshot_popup.png)
 ![Screnshot of an achievement list UI](readme_screenshot_menu.png)
@@ -15,6 +14,8 @@ Requires Godot 4.6
 - Create an `AchievementList` resource
 - Add the `AchievementList` to your project settings under
   `Sv Achievements > General > Achievements`.
+
+The project at the root of the repository is an example of usage.
 
 ## License
 See [`LICENSE.txt`](LICENSE.txt)
