@@ -3,5 +3,10 @@
 /android/
 
 # Build files
-build/linux_x86_64/sv-achievements-example-game.pck
-build/linux_x86_64/sv-achievements-example-game.x86_64
+build/**/*.pck
+build/**/*.x86_64
+build/**/*.html
+build/**/*.js
+build/**/*.png
+build/**/*.wasm
+
