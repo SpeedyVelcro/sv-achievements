@@ -1,0 +1,126 @@
+name: Build, Test and Publish
+on:
+  push:
+    branches:
+      - "*"
+  release:
+    types: [published]
+
+env:
+  GODOT_VERSION: "4.7.1-stable"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build All
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v7
+      - name: Install Godot Engine
+        uses: "./.github/actions/install-godot"
+        with:
+          version: "4.7.1-stable"
+          sha_256: "c7ff14fd28472c8d4f193043de30278dcf7e5241a1dcf7566b02e27addaa33ba"
+          platform: "linux.x86_64"
+      - name: Install Export Templates
+        uses: "./.github/actions/install-export-templates"
+        with:
+          version: "4.7.1-stable"
+          sha_256: "86409db6200b6f8fd3230989c2d2002851f3dd18acf11d7bdbafddf5a0dd0f72"
+      - name: Build Example Game
+        run: make
+      - name: Package Game
+        run: |
+          mkdir -p zip_root
+          mv build/linux_x86_64/* zip_root
+          cd zip_root && tar -czf \
+            "../sv-achievements-example-game-linux.x86_64-${{ github.ref_name }}.tar.gz" \
+            ./*
+      - name: Upload Example Game Artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: example-game
+          path: sv-achievements-example-game-*.*
+  # test:
+  #   name: Run Tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repo
+  #       uses: actions/checkout@v7
+  #     - name: Run gdUnit4 Tests
+  #       uses: MikeSchulze/gdUnit4-action@v1
+  #       with:
+  #         godot-version: "4.7.1"
+  #         godot-status: "stable"
+  #         paths: |
+  #           res://test
+  #         version: "v6.1.3"
+  #         publish-report: false # true causes failure due to read-only permission
+  package:
+    name: Package Addon
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v7
+      - name: Inject Version Number
+        run: |
+          sed -i 's/\(version="\).*\("\)/\1${{ github.ref_name }}\2/' addons/sv_achievements/plugin.cfg
+      - name: Archive Addon
+        run: |
+          mkdir zip_root
+          mkdir zip_root/addons
+          cp -r addons/sv_achievements zip_root/addons
+          (cd zip_root && zip -r \
+            "../sv-achievements-addon-${{ github.ref_name }}.zip" \
+            ./*)
+          (cd zip_root && tar -czf \
+            "../sv-achievements-addon-${{ github.ref_name }}.tar.gz" \
+            ./*)
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: addon-archives
+          path: |
+            sv-achievements-addon-${{ github.ref_name }}.zip
+            sv-achievements-addon-${{ github.ref_name }}.tar.gz
+  publish:
+    name: Publish release
+    needs: [build, package]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release'
+    steps:
+      - name: Download packaged addons
+        uses: actions/download-artifact@v8
+        with:
+          name: addon-archives
+          skip-decompress: false
+          merge-multiple: false
+      - name: Download example game (all platforms)
+        uses: actions/download-artifact@v8
+        with:
+          name: example-game
+          skip-decompress: false
+          merge-multiple: true
+      - name: Release artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release upload \
+            "${{ github.ref_name }}" \
+            sv-achievements-addon-*.* \
+            sv-achievements-example-game-*.* \
+            --repo "${{ github.repository }}"
+      - name: Checkout Repo
+        uses: actions/checkout@v7
+      - name: Copy patch notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release edit \
+            "${{ github.ref_name }}" \
+            --repo "${{ github.repository }}" \
+            --notes-file release-notes/$(if [ -f release-notes/${{ github.ref_name }}.md ]; then echo "${{ github.ref_name }}.md"; else echo "latest.md"; fi)
+
