@@ -5,7 +5,7 @@ Achievements framework and related UI elements for the Godot Engine.
 ![Screnshot of an achievement list UI](readme_screenshot_menu.png)
 
 ## Dependencies
-Requires Godot 4.6
+Requires Godot 4.7
 
 ## Usage
 - Copy the `addons/sv_achievements` folder into your project's `addons` folder
