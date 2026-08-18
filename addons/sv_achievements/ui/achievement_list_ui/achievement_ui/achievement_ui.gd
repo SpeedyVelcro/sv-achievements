@@ -9,10 +9,10 @@ extends MarginContainer
 ## Achievement to display. Required.
 @export var achievement: Achievement:
 	set(value):
-		_disconnect_signals()
+		_disconnect_achievement_signals()
 		achievement = value
 		_display_achievement()
-		_connect_signals()
+		_connect_achievement_signals()
 	get:
 		return achievement
 
@@ -192,16 +192,7 @@ var _default_grayscale_shader: ShaderMaterial = preload("res://addons/sv_achieve
 # Override
 func _ready() -> void:
 	_display_achievement()
-	
-	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
-	var enable_sync: bool = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
-		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
-		else false
-	
-	if enable_sync:
-		_sync_button.visible = true
-	else:
-		_sync_button.visible = false
+	_connect_singleton_signals()
 
 
 func _display_achievement() -> void:
@@ -217,7 +208,6 @@ func _display_achievement() -> void:
 	_update_progress()
 	_update_objective_list()
 	_update_sync_button()
-
 
 func _update_icon() -> void:
 	if _icon_texture_rect == null or achievement == null:
@@ -350,24 +340,43 @@ func _update_sync_button() -> void:
 	if _sync_button == null:
 		return
 	
-	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
-	var allow_locked_sync: bool = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
-		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
-		else false
+	if AchievementService.sync_enabled:
+		_sync_button.disabled = not (achievement.is_unlocked() or AchievementService.locked_sync_allowed)
+	else:
+		_sync_button.disabled = true
+
+
+func _connect_singleton_signals() -> void:
+	if not AchievementService.sync_enabled_changed.is_connected(_on_singleton_sync_enabled_changed):
+		AchievementService.sync_enabled_changed.connect(_on_singleton_sync_enabled_changed)
 	
-	_sync_button.disabled = not (achievement.is_unlocked() or allow_locked_sync)
+	if not AchievementService.locked_sync_allowed_changed.is_connected(_on_singleton_locked_sync_allowed_changed):
+		AchievementService.locked_sync_allowed_changed.connect(_on_singleton_locked_sync_allowed_changed)
 
 
-func _connect_signals() -> void:
+func _disconnect_singleton_signals() -> void:
+	if AchievementService.sync_enabled_changed.is_connected(_on_singleton_sync_enabled_changed):
+		AchievementService.sync_enabled_changed.disconnect(_on_singleton_sync_enabled_changed)
+	
+	if AchievementService.locked_sync_allowed_changed.is_connected(_on_singleton_locked_sync_allowed_changed):
+		AchievementService.locked_sync_allowed_changed.disconnect(_on_singleton_locked_sync_allowed_changed)
+
+
+func _connect_achievement_signals() -> void:
 	if achievement == null:
 		return
 	
-	achievement.unlocked.connect(_on_achievement_unlocked)
-	achievement.progress_changed.connect(_on_achievement_progress_changed)
-	achievement.reset.connect(_on_achievement_reset)
+	if not achievement.unlocked.is_connected(_on_achievement_unlocked):
+		achievement.unlocked.connect(_on_achievement_unlocked)
+	
+	if not achievement.progress_changed.is_connected(_on_achievement_progress_changed):
+		achievement.progress_changed.connect(_on_achievement_progress_changed)
+	
+	if not achievement.reset.is_connected(_on_achievement_reset):
+		achievement.reset.connect(_on_achievement_reset)
 
 
-func _disconnect_signals() -> void:
+func _disconnect_achievement_signals() -> void:
 	if achievement == null:
 		return
 	
@@ -386,6 +395,7 @@ func _on_achievement_unlocked() -> void:
 	_update_icon()
 	_update_details()
 	_update_reward()
+	_update_sync_button()
 
 
 # Signal connection
@@ -399,6 +409,7 @@ func _on_achievement_reset() -> void:
 	_update_details()
 	_update_reward()
 	_update_progress()
+	_update_sync_button()
 
 
 # Signal connection
@@ -406,6 +417,16 @@ func _on_sync_button_pressed() -> void:
 	achievement.request_sync()
 
 
+# Signal connection
+func _on_singleton_sync_enabled_changed(new_value: bool) -> void:
+	_update_sync_button()
+
+
+func _on_singleton_locked_sync_allowed_changed(new_value: bool) -> void:
+	_update_sync_button()
+
+
 # Override
 func _exit_tree() -> void:
-	_disconnect_signals()
+	_disconnect_singleton_signals()
+	_disconnect_achievement_signals()

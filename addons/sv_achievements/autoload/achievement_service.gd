@@ -9,7 +9,61 @@ extends Node
 ## signal connections.
 var achievements: Array[Achievement] = []
 
+## True if sync is enabled. Achievements will sync with the achievement API configured
+## in [ProjectSettings] whenever an achievement is unlocked. A sync button will
+## also be available in the UI. On ready, this is set by reading [ProjectSettings],
+## but should thereafter be set on this singleton if you want to change it.
+var sync_enabled: bool = false:
+	set(value):
+		sync_enabled = value
+		sync_enabled_changed.emit(value)
+	get:
+		return sync_enabled
+
+## True if locked achievements can also be synced instead of just unlocked ones
+## (as is the default behaviour). On ready, this is set by reading [ProjectSettings],
+## but should thereafter be set on this singleton if you want to change it.
+var locked_sync_allowed: bool = false:
+	set(value):
+		locked_sync_allowed = value
+		locked_sync_allowed_changed.emit(value)
+	get:
+		return locked_sync_allowed
+
+## True if two-way sync is enabled. Under this scheme, achievement progress from
+## the API can be used to update local achievement progress. The achievement
+## progress with higher priority is used. Functionality may be limited depending
+## on which API is used. On ready, this is set by reading [ProjectSettings],
+## but should thereafter be set on this singleton if you want to change it.
+var two_way_sync: bool = false:
+	set(value):
+		two_way_sync = value
+		two_way_sync_changed.emit(value)
+	get:
+		return two_way_sync
+
+## Emitted when an achievement is unlocked.
 signal achievement_unlocked(achievement: Achievement)
+
+## Emitted when the value of [member sync_enabled] changes.
+signal sync_enabled_changed(new_value: bool)
+
+## Emitted when the value of [member locked_sync_allowed] changes.
+signal locked_sync_allowed_changed(new_value: bool)
+
+## Emitted when the value of [member two_way_sync] changes.
+signal two_way_sync_changed(new_value: bool)
+
+
+# Override
+func _ready() -> void:
+	SVAchievementsProjectSettings.configure()
+	_load_settings()
+	_load_achievements()
+	_connect_achievements()
+	load_progress()
+	if _is_auto_sync_on_start():
+		sync_all_achievements()
 
 
 ## Gets the achievement with the given ID. If there is no achievement with that
@@ -123,16 +177,6 @@ func _get_settings_completion_file_path() -> String:
 
 
 # Override
-func _ready() -> void:
-	SVAchievementsProjectSettings.configure()
-	_load_achievements()
-	_connect_achievements()
-	load_progress()
-	if _is_auto_sync_on_start():
-		sync_all_achievements()
-
-
-# Override
 func _notification(what: int) -> void:
 	# We can't detect calls to get_tree().quit(), but we can at least handle all ways of quitting
 	# through the OS here.
@@ -190,10 +234,10 @@ func sync_achievement(id: String) -> void:
 ## Similar to [method sync_achievement], but allows you to sync a provided achievement
 ## without it needing to be registered.
 func sync_given_achievement(achievement: Achievement) -> void:
-	if not _is_sync_enabled():
+	if not sync_enabled:
 		return
 	
-	if (not _is_locked_sync_allowed()) and (not achievement.is_unlocked()):
+	if (not locked_sync_allowed) and (not achievement.is_unlocked()):
 		return
 	
 	var adapter := _get_achievement_sync_adapter()
@@ -201,7 +245,7 @@ func sync_given_achievement(achievement: Achievement) -> void:
 	if adapter == null:
 		return
 	
-	if _is_sync_two_way():
+	if two_way_sync:
 		adapter.sync_two_way(achievement)
 	else:
 		adapter.sync_one_way(achievement)
@@ -213,44 +257,22 @@ func sync_all_achievements() -> void:
 
 
 func sync_given_achievements(achievements: Array[Achievement]) -> void:
-	if not _is_sync_enabled():
+	if not sync_enabled:
 		return
 	
 	var to_sync: Array[Achievement] = achievements.filter(func(achievement: Achievement) -> bool: \
-			return achievement.is_unlocked() or _is_locked_sync_allowed())
+			return achievement.is_unlocked() or locked_sync_allowed)
 	
 	var adapter := _get_achievement_sync_adapter()
 	
 	if adapter == null:
 		return
 	
-	if _is_sync_two_way():
+	if two_way_sync:
 		adapter.two_way_sync_multiple(achievements)
 	else:
 		adapter.one_way_sync_multiple(achievements)
 
-
-# TODO: Most of this settings methods can probably be moved to a helper class -
-# possibly the already-existing achievement_project_settings.gd
-func _is_sync_enabled() -> bool:
-	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
-	return ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
-		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
-		else false
-
-
-func _is_locked_sync_allowed() -> bool:
-	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
-	return ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
-		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
-		else false
-
-
-func _is_sync_two_way() -> bool:
-	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
-	return ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH) \
-		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH) \
-		else false
 
 func _is_auto_sync_on_start() -> bool:
 	# Don't call get_setting() if it doesn't exist because we don't want to clutter the output with warnings.
@@ -287,6 +309,20 @@ func _get_achievement_sync_adapter() -> AchievementSyncAdapter:
 		_:
 			push_error("Invalid achievement API setting. Achievement sync will not work.")
 			return null
+
+
+func _load_settings() -> void:
+	sync_enabled = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ENABLE_SYNC_PATH) \
+		else false
+	
+	locked_sync_allowed = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_ALLOW_LOCKED_SYNC_PATH) \
+		else false
+	
+	two_way_sync = ProjectSettings.get_setting_with_override(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH) \
+		if ProjectSettings.has_setting(SVAchievementsConstants.SETTINGS_TWO_WAY_SYNC_PATH) \
+		else false
 
 
 func _connect_achievements() -> void:

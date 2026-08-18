@@ -40,16 +40,16 @@ const SETTINGS_ACHIEVEMENT_API_PATH := _SETTINGS_SYNC_PATH + "/achievement_api"
 const SETTINGS_CUSTOM_ACHIEVEMENT_SYNC_ADAPTER_PATH_PATH := _SETTINGS_SYNC_PATH + "/custom_achievement_sync_adapter_path"
 ## Path to the setting in [ProjectSettings] for whether sync buttons should be
 ## shown on achievements (these are for pushing unlock status to e.g. Steam
-## or Newgrounds if it failed to unlock before).
+## or Newgrounds if it failed to unlock before). This is only read on startup.
 const SETTINGS_ENABLE_SYNC_PATH := _SETTINGS_SYNC_PATH + "/enable_sync"
 ## Path to the setting in [ProjectSettings] for allowing synchronization of locked
-## achievements as well as unlocked ones.
+## achievements as well as unlocked ones. This is only read on startup.
 const SETTINGS_ALLOW_LOCKED_SYNC_PATH := _SETTINGS_SYNC_PATH + "/allow_locked_sync"
 ## Path to the setting in [ProjectSettings] for allowing two-way sync where the
 ## side with the greatest progress gets priority. This may be limited for
 ## certain kinds of achievements where the backend can't fully represent the
 ## achievement objectives (collection and indexed objectives are particularly
-## uncommon on achievement backends.)
+## uncommon on achievement backends). This is only read on startup.
 const SETTINGS_TWO_WAY_SYNC_PATH := _SETTINGS_SYNC_PATH + "/two_way_sync"
 ## Path to the setting in [ProjectSettings] that causes AchievementService to
 ## automatically sync all achievements on start after loading them.
