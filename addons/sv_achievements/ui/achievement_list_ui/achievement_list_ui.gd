@@ -14,6 +14,19 @@ extends VBoxContainer
 	get:
 		return show_separators
 
+## [StyleBox] displayed over each achievement when focused. If this is not set,
+## falls back on the [code]"focus"[/code] stylebox for [Button] set for the
+## current theme.
+@export var focus_stylebox_override: StyleBox = null:
+	set(value):
+		if value == focus_stylebox_override:
+			return
+		focus_stylebox_override = value
+		for node in _achievement_nodes:
+			node.focus_stylebox_override = focus_stylebox_override
+	get:
+		return focus_stylebox_override
+
 @export_category("Icons")
 ## Set to true to display achievement icons. [member default_achievement_icon]
 ## should be set if not every achievement has its own icon.
@@ -231,6 +244,7 @@ func _ready() -> void:
 			var separator = HSeparator.new()
 			separator.visible = show_separators
 			add_child(separator)
+			_separator_nodes.append(separator)
 		
 		var ui := _achievement_scene.instantiate()
 		
@@ -254,5 +268,20 @@ func _ready() -> void:
 		ui.size_flags_horizontal = SizeFlags.SIZE_EXPAND_FILL
 		
 		add_child(ui)
+		_achievement_nodes.append(ui)
 		
 		first = false
+
+
+## Returns the [Control] for the first achievement in this list. This is useful
+## for calling [method Control.grab_focus] on that control in order to enable
+## keyboard/controller navigation.
+func get_first_achievement_control() -> Control:
+	return _achievement_nodes.front()
+
+
+## Returns the [Control]s for each achievement in this list. This is useful for
+## calling [method Control.grab_focus] on one of those controls in order to
+## enable keyboard/controller navigation.
+func get_achievement_controls() -> Array[Control]:
+	return _achievement_nodes.duplicate()

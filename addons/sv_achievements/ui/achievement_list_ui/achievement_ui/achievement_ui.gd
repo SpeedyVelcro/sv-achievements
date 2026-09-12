@@ -16,6 +16,11 @@ extends MarginContainer
 	get:
 		return achievement
 
+## [StyleBox] displayed over the achievement UI when focused. If this is not set,
+## falls back on the [code]"focus"[/code] stylebox for [Button] set for the
+## current theme.
+@export var focus_stylebox_override: StyleBox = null
+
 @export_category("Icon")
 ## Set to true to display the icon. [member default_achievement_icon] and/or
 ## [member Achievement.icon] should be set if this is true.
@@ -188,11 +193,19 @@ extends MarginContainer
 var _default_icon_border_stylebox: StyleBox = preload("res://addons/sv_achievements/ui/theming/icon_border/icon_border_white.tres")
 var _default_grayscale_shader: ShaderMaterial = preload("res://addons/sv_achievements/shader/grayscale_itu_shader_material.tres")
 
-
 # Override
 func _ready() -> void:
 	_display_achievement()
 	_connect_singleton_signals()
+
+
+# Override
+func _draw() -> void:
+	const IGNORE_HIDDEN_FOCUS := true
+	if has_focus(IGNORE_HIDDEN_FOCUS):
+		draw_style_box(
+			focus_stylebox_override if focus_stylebox_override else get_theme_stylebox("focus", "Button"),
+			Rect2(Vector2.ZERO, size))
 
 
 func _display_achievement() -> void:
