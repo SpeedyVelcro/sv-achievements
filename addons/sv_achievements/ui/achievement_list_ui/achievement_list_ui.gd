@@ -14,6 +14,41 @@ extends VBoxContainer
 	get:
 		return show_separators
 
+## Override for the [LabelSettings] on the achievement name labels. If this is
+## not set, the name labels will show with a defualt label settings with 24px
+## font.
+@export var names_label_settings_override: LabelSettings = null:
+	set(value):
+		if value == names_label_settings_override:
+			return
+		names_label_settings_override = value
+		for node in _achievement_nodes:
+			node.name_label_settings_override = value
+	get:
+		return names_label_settings_override
+
+## Minimum size for the sync buttons.
+@export var sync_buttons_minimum_size: Vector2 = Vector2(80, 0):
+	set(value):
+		if value == sync_buttons_minimum_size:
+			return
+		sync_buttons_minimum_size = value
+		for node in _achievement_nodes:
+			node.sync_button_minimum_size = value
+	get:
+		return sync_buttons_minimum_size
+
+## Margin to be displayed around each achievement. Width in pixels.
+@export var achievement_margin_size_override: int = 16:
+	set(value):
+		if value == achievement_margin_size_override:
+			return
+		achievement_margin_size_override = value
+		for node in _achievement_nodes:
+			node.margin_size_override = value
+	get:
+		return achievement_margin_size_override
+
 ## [StyleBox] displayed over each achievement when focused. If this is not set,
 ## falls back on the [code]"focus"[/code] stylebox for [Button] set for the
 ## current theme.
@@ -39,6 +74,18 @@ extends VBoxContainer
 			node.show_icon = value
 	get:
 		return show_icons
+
+## If set to a non-zero vector, achievement icons will be displayed at this
+## size rather than their image's dimensions.
+@export var icons_size_override: Vector2 = Vector2(0, 0):
+	set(value):
+		if value == icons_size_override:
+			return
+		icons_size_override = value
+		for node in _achievement_nodes:
+			node.icon_size_override = value
+	get:
+		return icons_size_override
 
 ## When true and achievements are locked, a grayscale filter will be applied
 ## to their icons.
@@ -249,7 +296,11 @@ func _ready() -> void:
 		var ui := _achievement_scene.instantiate()
 		
 		ui.achievement = achievement
+		ui.name_label_settings_override = names_label_settings_override
+		ui.sync_button_minimum_size = sync_buttons_minimum_size
+		ui.margin_size_override = achievement_margin_size_override
 		ui.show_icon = show_icons
+		ui.icon_size_override = icons_size_override
 		ui.grayscale_icon_when_locked = grayscale_icons_when_locked
 		ui.show_icon_border = show_icon_borders
 		ui.icon_border_stylebox_override = icon_border_stylebox_override

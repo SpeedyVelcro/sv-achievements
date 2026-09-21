@@ -9,4 +9,6 @@
   scene.
 - Fixed `AchievementListUI` exports not propagating to children after
   ready.
+- Added several exported variables to `AchievementUI` and
+  `AchievementListUI` for styling that can't be done with themes.
 

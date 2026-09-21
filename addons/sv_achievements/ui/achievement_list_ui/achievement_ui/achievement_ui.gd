@@ -16,6 +16,39 @@ extends MarginContainer
 	get:
 		return achievement
 
+## Override for the [LabelSettings] on the achievement name label. If this is
+## not set, the name label will show with a defualt label settings with 24px
+## font.
+@export var name_label_settings_override: LabelSettings:
+	set(value):
+		name_label_settings_override = value
+		_update_name_label_settings()
+	get:
+		return name_label_settings_override
+
+## Minimum size for the sync button.
+@export var sync_button_minimum_size: Vector2 = Vector2(80, 0):
+	set(value):
+		sync_button_minimum_size = value
+		_update_sync_button_minimum_size()
+	get:
+		return sync_button_minimum_size
+
+## Margin size to display around the achievement.
+@export var margin_size_override: int = 16:
+	set(value):
+		margin_size_override = value
+		remove_theme_constant_override("margin_bottom")
+		remove_theme_constant_override("margin_left")
+		remove_theme_constant_override("margin_right")
+		remove_theme_constant_override("margin_top")
+		add_theme_constant_override("margin_bottom", value)
+		add_theme_constant_override("margin_left", value)
+		add_theme_constant_override("margin_right", value)
+		add_theme_constant_override("margin_top", value)
+	get:
+		return margin_size_override
+
 ## [StyleBox] displayed over the achievement UI when focused. If this is not set,
 ## falls back on the [code]"focus"[/code] stylebox for [Button] set for the
 ## current theme.
@@ -30,6 +63,15 @@ extends MarginContainer
 		_update_icon()
 	get:
 		return show_icon
+
+## If set to a non-zero vector, achievement icons will be displayed at this
+## size rather than their image's dimensions.
+@export var icon_size_override: Vector2 = Vector2(0, 0):
+	set(value):
+		icon_size_override = value
+		_update_icon_size_override()
+	get:
+		return icon_size_override
 
 ## When true and this achievement is locked, a grayscale filter will be applied
 ## to the icon.
@@ -190,11 +232,18 @@ extends MarginContainer
 @onready var _objective_container: Control = $VBoxContainer/ObjectiveFoldableContainer
 @onready var _objective_list_ui: Control = $VBoxContainer/ObjectiveFoldableContainer/ObjectiveListUI
 
+var _default_name_label_settings: LabelSettings
 var _default_icon_border_stylebox: StyleBox = preload("res://addons/sv_achievements/ui/theming/icon_border/icon_border_white.tres")
 var _default_grayscale_shader: ShaderMaterial = preload("res://addons/sv_achievements/shader/grayscale_itu_shader_material.tres")
 
 # Override
 func _ready() -> void:
+	_default_name_label_settings = _name_label.label_settings
+	
+	_update_name_label_settings()
+	_update_icon_size_override()
+	_update_sync_button_minimum_size()
+	
 	_display_achievement()
 	_connect_singleton_signals()
 
@@ -221,6 +270,24 @@ func _display_achievement() -> void:
 	_update_progress()
 	_update_objective_list()
 	_update_sync_button()
+
+
+func _update_name_label_settings() -> void:
+	if _name_label == null:
+		return # Not ready yet
+	
+	if name_label_settings_override != null:
+		_name_label.label_settings = name_label_settings_override
+	else:
+		_name_label.label_settings = _default_name_label_settings
+
+
+func _update_sync_button_minimum_size() -> void:
+	if _sync_button == null:
+		return # Not ready yet
+	
+	_sync_button.custom_minimum_size = sync_button_minimum_size
+
 
 func _update_icon() -> void:
 	if _icon_texture_rect == null or achievement == null:
@@ -256,6 +323,18 @@ func _update_icon() -> void:
 	_icon_border_panel.visible = true
 	
 	_icon_border_panel.add_theme_stylebox_override("panel", icon_border_stylebox_override if icon_border_stylebox_override != null else _default_icon_border_stylebox)
+
+
+func _update_icon_size_override() -> void:
+	if _icon_texture_rect == null:
+		return # Not until ready
+	
+	if icon_size_override == Vector2.ZERO:
+		_icon_texture_rect.custom_minimum_size = Vector2.ZERO
+		_icon_texture_rect.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	else:
+		_icon_texture_rect.custom_minimum_size = icon_size_override
+		_icon_texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 
 
 func _update_details() -> void:
