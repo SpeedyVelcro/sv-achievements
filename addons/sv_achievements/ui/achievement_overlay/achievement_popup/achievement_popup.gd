@@ -15,6 +15,24 @@ extends PanelContainer
 	get:
 		return achievement
 
+## Override for the [LabelSettings] on the achievement name label. If this is
+## not set, the name label will show with a defualt label settings with 24px
+## font.
+@export var name_label_settings_override: LabelSettings = null:
+	set(value):
+		name_label_settings_override = value
+		_update_name_label_settings()
+	get:
+		return name_label_settings_override
+
+## Thickness of the margin within the popup in pixels.
+@export var margin_size: int = 16:
+	set(value):
+		margin_size = value
+		_update_margin_size()
+	get:
+		return margin_size
+
 @export_category("Icon")
 ## Set to true to display the icon. [member default_achievement_icon] and/or
 ## [member Achievement.icon] should be set if this is true.
@@ -36,6 +54,15 @@ extends PanelContainer
 	get:
 		return show_icon_border
 
+## If set to a non-zero vector, the achievement icon will be displayed at this
+## size rather than its image's dimensions.
+@export var icon_size_override: Vector2 = Vector2.ZERO:
+	set(value):
+		icon_size_override = value
+		_update_icon_size()
+	get:
+		return icon_size_override
+
 ## Stylebox used to display a border around the achievement icon. Set this to
 ## replace the default icon border (by default a white border). See
 ## [member show_icon_border].
@@ -45,6 +72,14 @@ extends PanelContainer
 		_update_icon()
 	get:
 		return icon_border_stylebox_override
+
+## Separation in pixels between the icon and the rest of the achievement info.
+@export var icon_separation: int = 16:
+	set(value):
+		icon_separation = value
+		_update_icon_separation()
+	get:
+		return icon_separation
 
 ## Default achievement icon to display if the [member Achievement.icon] is not
 ## set. Leaving this unset may result in undefined behaviour. Set [member display_icon]
@@ -77,6 +112,8 @@ extends PanelContainer
 	get:
 		return bold_reward_title
 
+@onready var _margin_container: MarginContainer = $MarginContainer
+@onready var _box_container_containing_icon: BoxContainer = $MarginContainer/HBoxContainer
 @onready var _icon_texture_rect: TextureRect = $MarginContainer/HBoxContainer/IconTextureRect
 @onready var _icon_border_panel: Panel = $MarginContainer/HBoxContainer/IconTextureRect/IconBorderPanel
 @onready var _name_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/NameLabel
@@ -85,13 +122,62 @@ extends PanelContainer
 @onready var _reward_title_label: RichTextLabel = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer/RewardTitleRichTextLabel
 @onready var _reward_label: Label = $MarginContainer/HBoxContainer/VBoxContainer/RewardHBoxContainer/RewardLabel
 
+var _default_name_label_settings: LabelSettings
 var _default_icon_border_stylebox: StyleBox = preload("res://addons/sv_achievements/ui/theming/icon_border/icon_border_white.tres")
 
 
 # Override
 func _ready() -> void:
+	_default_name_label_settings = _name_label.label_settings
+	
+	_update_name_label_settings()
+	_update_margin_size()
+	_update_icon_size()
+	_update_icon_separation()
+	
 	_display_achievement()
 
+
+func _update_name_label_settings() -> void:
+	if _name_label == null:
+		return # Not until ready
+	
+	if name_label_settings_override:
+		_name_label.label_settings = name_label_settings_override
+	else:
+		_name_label.label_settings = _default_name_label_settings
+
+
+func _update_margin_size() -> void:
+	if _margin_container == null:
+		return # Not until ready
+	
+	_margin_container.remove_theme_constant_override("margin_bottom")
+	_margin_container.remove_theme_constant_override("margin_left")
+	_margin_container.remove_theme_constant_override("margin_top")
+	_margin_container.remove_theme_constant_override("margin_right")
+	_margin_container.add_theme_constant_override("margin_bottom", margin_size)
+	_margin_container.add_theme_constant_override("margin_left", margin_size)
+	_margin_container.add_theme_constant_override("margin_right", margin_size)
+	_margin_container.add_theme_constant_override("margin_top", margin_size)
+
+func _update_icon_size() -> void:
+	if _icon_texture_rect == null:
+		return # Not until ready
+	
+	if icon_size_override == Vector2.ZERO:
+		_icon_texture_rect.custom_minimum_size = Vector2.ZERO
+		_icon_texture_rect.expand_mode = TextureRect.EXPAND_KEEP_SIZE
+	else:
+		_icon_texture_rect.custom_minimum_size = icon_size_override
+		_icon_texture_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+
+func _update_icon_separation() -> void:
+	if _box_container_containing_icon == null:
+		return # Not until ready
+	
+	_box_container_containing_icon.remove_theme_constant_override("separation")
+	_box_container_containing_icon.add_theme_constant_override("separation", icon_separation)
 
 func _display_achievement() -> void:
 	if _name_label == null or _description_label == null or achievement == null:

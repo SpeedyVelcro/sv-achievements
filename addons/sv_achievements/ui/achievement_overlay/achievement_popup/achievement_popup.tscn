@@ -56,7 +56,7 @@ text = "Achievement Name"
 label_settings = SubResource("LabelSettings_ag1u7")
 
 [node name="DescriptionLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=629909670]
-custom_minimum_size = Vector2(0, 16)
+custom_minimum_size = Vector2(16, 16)
 layout_mode = 2
 size_flags_vertical = 3
 text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempot incididunt ut labore. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."

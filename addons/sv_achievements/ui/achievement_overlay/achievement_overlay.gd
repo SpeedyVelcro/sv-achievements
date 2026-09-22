@@ -44,6 +44,28 @@ enum PopupAnimation {
 ## Ease type for animations. See [enum Tween.EaseType].
 @export var ease_type: Tween.EaseType
 
+## Override for the [LabelSettings] on the achievement popups' name labels. If this is
+## not set, the name labels will show with a defualt label settings with 24px
+## font.
+@export var name_labels_settings_override: LabelSettings = null:
+	set(value):
+		name_labels_settings_override = value
+		for popup in _popups:
+			if is_instance_valid(popup):
+				popup.name_label_settings_override = value
+	get:
+		return name_labels_settings_override
+
+## Thickness of the margin within each popup in pixels.
+@export var popup_margin_size: int = 16:
+	set(value):
+		popup_margin_size = value
+		for popup in _popups:
+			if is_instance_valid(popup):
+				popup.margin_size = popup_margin_size
+	get:
+		return popup_margin_size
+
 @export_category("Icons")
 ## Set to true to display achievement icons on popups. [member default_achievement_icon] and/or
 ## [member Achievement.icon] should be set if this is true.
@@ -51,10 +73,19 @@ enum PopupAnimation {
 	set(value):
 		show_icons = value
 		for popup in _popups:
-			if popup != null:
+			if is_instance_valid(popup):
 				popup.show_icon = value
 	get:
 		return show_icons
+
+## If set to a non-zero vector, each popup's achievement icon will be displayed at this
+## size rather than the image's dimensions.
+@export var icon_size_override: Vector2 = Vector2.ZERO:
+	set(value):
+		icon_size_override = value
+		for popup in _popups:
+			if is_instance_valid(popup):
+				popup.icon_size_override = value
 
 ## If true, a border will be displayed around the icon. This border is a panel
 ## that displays above the icon with custom theming to show a white border around
@@ -64,7 +95,7 @@ enum PopupAnimation {
 	set(value):
 		show_icon_borders = value
 		for popup in _popups:
-			if popup != null:
+			if is_instance_valid(popup):
 				popup.show_icon_border = value
 	get:
 		return show_icon_borders
@@ -76,10 +107,18 @@ enum PopupAnimation {
 	set(value):
 		icon_border_stylebox_override = value
 		for popup in _popups:
-			if popup != null:
+			if is_instance_valid(popup):
 				popup.icon_border_stylebox_override = value
 	get:
 		return icon_border_stylebox_override
+
+## Separation in pixels between each popup's icon and the rest of its achievement info.
+@export var icon_separation: int = 16:
+	set(value):
+		icon_separation = value
+		for popup in _popups:
+			if is_instance_valid(popup):
+				popup.icon_separation = value
 
 ## Default achievement icon to display if the [member Achievement.icon] is not
 ## set. Leaving this unset may result in undefined behaviour. Set [member display_icon]
@@ -88,7 +127,7 @@ enum PopupAnimation {
 	set(value):
 		default_achievement_icon = value
 		for popup in _popups:
-			if popup != null:
+			if is_instance_valid(popup):
 				popup.default_achievement_icon = value
 	get:
 		return default_achievement_icon
@@ -102,7 +141,7 @@ enum PopupAnimation {
 	set(value):
 		show_rewards = value
 		for popup in _popups:
-			if popup != null:
+			if is_instance_valid(popup):
 				popup.show_reward = value
 	get:
 		return show_rewards
@@ -113,7 +152,7 @@ enum PopupAnimation {
 	set(value):
 		bold_reward_titles = value
 		for popup in _popups:
-			if popup != null:
+			if is_instance_valid(popup):
 				popup.bold_reward_title = value
 	get:
 		return bold_reward_titles
@@ -230,9 +269,13 @@ func _create_popup(achievement: Achievement) -> int:
 		_popups.set(index, popup)
 	
 	popup.achievement = achievement
+	popup.name_label_settings_override = name_labels_settings_override
+	popup.margin_size = popup_margin_size
 	popup.show_icon = show_icons
+	popup.icon_size_override = icon_size_override
 	popup.show_icon_border = show_icon_borders
 	popup.icon_border_stylebox_override = icon_border_stylebox_override
+	popup.icon_separation = icon_separation
 	popup.default_achievement_icon = default_achievement_icon
 	popup.show_reward = show_rewards
 	popup.bold_reward_title = bold_reward_titles
