@@ -12,4 +12,6 @@
 - Added several exported variables to `AchievementUI`,
   `AchievementListUI`, `AchievementPopup`, and `AchievementOverlay` for
   styling that can't be done with themes.
+- New overridable method `IndexedAchievementObjective._append_generated_objectives()`
+  for use when automatically generating a list of achievement objectives.
 
