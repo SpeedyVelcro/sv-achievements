@@ -14,4 +14,6 @@
   styling that can't be done with themes.
 - New overridable method `IndexedAchievementObjective._append_generated_objectives()`
   for use when automatically generating a list of achievement objectives.
+- Fix achievement UI progress bar proportion filled being limited to
+  a value of 10.
 
